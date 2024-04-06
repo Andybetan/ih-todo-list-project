@@ -1,4 +1,8 @@
 <script setup>
+import { useTasksStore } from '@/stores/tasksStore';
+import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
+
 </script>
 
 <template>
