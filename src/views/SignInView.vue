@@ -30,7 +30,7 @@ const validateEmail = () => {
     <h1 class="signin-title">Sign In</h1>
     <form class="signin-form" @submit.prevent="signIn">
       <div class="form-group">
-        <label for="username" class="form-label">Username:</label>
+        <label for="username" class="form-label">Email</label>
         <input type="email" id="username" class="form-input" v-model="user" required @input="validateEmail" />
         <span v-if="emailError" class="error-message">Invalid email address</span>
       </div>
@@ -44,7 +44,7 @@ const validateEmail = () => {
 </template>
 
   
-  <style scoped>
+<style scoped>
 
 .signin-container {
   max-width: 400px;
@@ -86,7 +86,8 @@ const validateEmail = () => {
   border: 1px solid #ced4da; 
   border-radius: 4px;
   width: 100%; 
-  max-width: 300px; 
+  max-width: 300px; /* Establece el ancho máximo para mantenerlo igual que el campo de email */
+  text-align: center; /* Centra el texto */
 }
 
 .signin-btn {
