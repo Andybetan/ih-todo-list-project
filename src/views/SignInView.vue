@@ -1,16 +1,29 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 import { useUserStore } from '@/stores/userStore'
 
+const router = useRouter()
 const userStore = useUserStore()
 
 const user = ref('')
 const password = ref('')
+const emailError = ref(false)
 
-const signIn = () => {
-	userStore.signIn(user.value, password.value)
+const signIn = async () => {
+  if (!emailError.value) {
+    await userStore.signIn(user.value, password.value)
+    router.push({ name: 'home' }) // Redirigir al usuario a la página HomeView
+  }
+}
+
+const validateEmail = () => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  emailError.value = !regex.test(user.value)
 }
 </script>
+
 
 <template>
   <main class="signin-container">
