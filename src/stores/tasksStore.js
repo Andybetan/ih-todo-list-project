@@ -1,19 +1,32 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import { fetchAllTasks } from '@/api/tasksApi'
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { createTask, fetchAllTasks } from "@/api/tasksApi";
 
-export const useTasksStore = defineStore('tasks', () => {
+export const useTasksStore = defineStore("tasks", () => {
   // State
-  const tasks = ref([])
+  const tasks = ref([]);
 
   // Getters
 
   // Actions
-  function fetchTasks() {
+  async function fetchTasks() {
     try {
-      tasks.value = fetchAllTasks()
+      //call the API
+      const data = await fetchAllTasks();
+      console.log(data);
+      // Update the state
+      tasks.value = fetchAllTasks();
     } catch (error) {
-      console.error(error)
+      console.error(error);
+    }
+  }
+
+  async function createNewTask(task) {
+    try {
+      //call to the API
+      await createTask(task);
+    } catch (err) {
+      console.error(err);
     }
   }
 
@@ -22,6 +35,7 @@ export const useTasksStore = defineStore('tasks', () => {
     tasks,
     // Getters
     // Actions
-    fetchTasks
-  }
-})
+    fetchTasks,
+    createTask,
+  };
+});
