@@ -4,6 +4,7 @@
 			<nav>
 				<RouterLink to="/">Home</RouterLink>
 				<RouterLink to="/about">About</RouterLink>
+				<RouterLink to="/about">Sing up</RouterLink>
 			</nav>
 		</div>
 	</header>
