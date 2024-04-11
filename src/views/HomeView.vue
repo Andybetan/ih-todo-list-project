@@ -21,14 +21,14 @@ const _addTask = async () => {
 };
 
 const signOut = async () => {
-  // Agrega aquí la lógica para cerrar sesión
+  // la lógica para cerrar sesión
   router.push({ name: 'signin' }); // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
 }
 </script>
 
 <template>
   <main class="todo-list-container">
-    <h1 class="todo-list-title">Todo list</h1>
+    <h1 class="todo-list-title">To-do list</h1>
     <section class="tasks-section">
       <span class="task-count">tasks: {{ tasks.length }}</span>
       <ul class="tasks-list">
