@@ -10,14 +10,14 @@ const { tasks } = storeToRefs(tasksStore);
 const taskTitle = ref('')
 
 const _addTask = async () => {
-	const task = {
-		user_id: '84432307-394d-4dc5-a0d0-fe9da23fe345',
-		title: taskTitle.value,
-		is_complete: false,
-	}
-	await tasksStore.createNewTask(task);
-	tasksStore.fetchTasks();
-	taskTitle.value = '';
+  const task = {
+    user_id: '84432307-394d-4dc5-a0d0-fe9da23fe345',
+    title: taskTitle.value,
+    is_complete: false,
+  }
+  await tasksStore.createNewTask(task);
+  tasksStore.fetchTasks();
+  taskTitle.value = '';
 };
 
 const signOut = async () => {
@@ -27,19 +27,20 @@ const signOut = async () => {
 </script>
 
 <template>
-  <main class="todo-list-container">
-    <h1 class="todo-list-title">To-do list</h1>
-    <section class="tasks-section">
-      <span class="task-count">tasks: {{ tasks.length }}</span>
-      <ul class="tasks-list">
-        <li v-for="task in tasks" :key="task.id"> 
-          {{ task.title }}
-        </li>
-      </ul>
-    </section>
-    <button class="signout-btn" @click="signOut">Sign Out</button>
-  </main>
-</template>
+	<main class="todo-list-container">
+	  <h1 class="todo-list-title">To-do list</h1>
+	  <section class="tasks-section">
+		<span class="task-count">tasks: {{ tasks.length }}</span>
+		<ul class="tasks-list">
+		  <li v-for="task in tasks" :key="task.id"> 
+			{{ task.title }}
+		  </li>
+		</ul>
+	  </section>
+	  <button class="create-task-btn" @click="_addTask">Create Task</button>
+	  <button class="signout-btn" @click="signOut">Sign Out</button>
+	</main>
+  </template>
 
 <style scoped>
 /* Estilos para el contenedor principal */
