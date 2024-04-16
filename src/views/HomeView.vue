@@ -24,6 +24,10 @@ const deleteTask = async (taskId) => {
   await tasksStore.deleteTask(taskId);
 };
 
+const updateTask = async (task) => {
+  await tasksStore.updateTask(task.id, task);
+};
+
 const signOut = async () => {
   // la lógica para cerrar sesión
   router.push({ name: 'signin' }); // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
@@ -33,19 +37,24 @@ const signOut = async () => {
 <template>
   <main class="todo-list-container">
     <h1 class="todo-list-title">To-do list</h1>
-    <section class="tasks-section">
-      <span class="task-count">tasks: {{ tasks.length }}</span>
-      <ul class="tasks-list">
-        <li v-for="task in tasks" :key="task.id">
-          <span>{{ task.title }}</span>
-          <button @click="deleteTask(task.id)" class="delete-task-btn">Delete</button>
-        </li>
-      </ul>
-    </section>
     <div class="input-container">
       <input type="text" v-model="taskTitle" placeholder="Enter task title" class="task-input">
       <button class="create-task-btn" @click="_addTask">Create Task</button>
     </div>
+    <section class="tasks-section">
+      <span class="task-count">tasks: {{ tasks.length }}</span>
+      <ul class="tasks-list">
+        <li v-for="task in tasks" :key="task.id">
+          <div class="task-item">
+            <div>
+              <input type="checkbox" v-model="task.is_complete" @change="updateTask(task)">
+              <span :class="{ 'completed-task': task.is_complete }">{{ task.title }}</span>
+            </div>
+            <button @click="deleteTask(task.id)" class="delete-task-btn">Delete</button>
+          </div>
+        </li>
+      </ul>
+    </section>
     <button class="signout-btn" @click="signOut">Sign Out</button>
   </main>
 </template>
@@ -82,8 +91,7 @@ const signOut = async () => {
   padding: 0;
 }
 
-.tasks-list li {
-  margin-bottom: 10px;
+.task-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -142,9 +150,18 @@ const signOut = async () => {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 80px;
 }
 
 .signout-btn:hover {
   background-color: #e64a19;
+}
+
+.completed-task {
+  text-decoration: line-through;
+}
+
+.task-item input[type="checkbox"] {
+  margin-right: 10px;
 }
 </style>

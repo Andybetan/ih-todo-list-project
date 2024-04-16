@@ -32,3 +32,16 @@ export const deleteTaskAPI = async (taskId) => {
 
   return true;
 };
+
+export const updateTaskAPI = async (taskId, updatedTask) => {
+  const { error } = await supabase
+    .from(TABLE_NAME)
+    .update(updatedTask)
+    .eq('id', taskId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return true;
+};
