@@ -12,7 +12,7 @@ export const fetchAllTasks = async () => {
   return data
 }
 
-export const createTask = async (task) => {
+export const createNewTaskAPI = async (task) => {
   const { error } = await supabase
   .from(TABLE_NAME)
   .insert(task)

@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { createNewTask, fetchAllTasks } from "@/api/tasksApi";
+import { createNewTaskAPI, fetchAllTasks } from "@/api/tasksApi";
 
 export const useTasksStore = defineStore("tasks", () => {
   // State
@@ -22,8 +22,10 @@ export const useTasksStore = defineStore("tasks", () => {
 
   async function createNewTask(task) {
     try {
-      //call to the API
-      await createNewTask(task);
+      // Llama a la función createTask de tu API
+      await createNewTaskAPI(task);
+      // Después de crear la tarea, actualiza la lista de tareas
+      await fetchTasks();
     } catch (err) {
       console.error(err);
     }

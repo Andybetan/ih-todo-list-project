@@ -27,75 +27,99 @@ const signOut = async () => {
 </script>
 
 <template>
-	<main class="todo-list-container">
-	  <h1 class="todo-list-title">To-do list</h1>
-	  <section class="tasks-section">
-		<span class="task-count">tasks: {{ tasks.length }}</span>
-		<ul class="tasks-list">
-		  <li v-for="task in tasks" :key="task.id"> 
-			{{ task.title }}
-		  </li>
-		</ul>
-	  </section>
-	  <button class="create-task-btn" @click="_addTask">Create Task</button>
-	  <button class="signout-btn" @click="signOut">Sign Out</button>
-	</main>
-  </template>
+  <main class="todo-list-container">
+    <h1 class="todo-list-title">To-do list</h1>
+    <section class="tasks-section">
+      <span class="task-count">tasks: {{ tasks.length }}</span>
+      <ul class="tasks-list">
+        <li v-for="task in tasks" :key="task.id">{{ task.title }}</li>
+      </ul>
+    </section>
+    <div class="input-container">
+      <input type="text" v-model="taskTitle" placeholder="Enter task title" class="task-input">
+      <button class="create-task-btn" @click="_addTask">Create Task</button>
+    </div>
+    <button class="signout-btn" @click="signOut">Sign Out</button>
+  </main>
+</template>
 
 <style scoped>
-/* Estilos para el contenedor principal */
 .todo-list-container {
   background-image: #b3e5fc;
-  padding: 20px; /* Espacio alrededor del contenido */
-  border-radius: 8px; /* Bordes redondeados */
+  padding: 20px;
+  border-radius: 8px;
   text-align: center;
 }
 
-/* Estilos para el título "Todo list" */
 .todo-list-title {
   font-family: 'Roboto', sans-serif;
   font-size: 36px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20px; /* Espacio inferior para separar del contenido siguiente */
+  margin-bottom: 20px;
 }
 
-/* Estilos para el texto "tasks: {{ tasks.length }}" */
 .task-count {
   font-family: 'Roboto', sans-serif;
   font-size: 18px;
-  color: #666; /* Color de texto gris */
-  margin-bottom: 10px; /* Espacio inferior para separar del contenido siguiente */
+  color: #666;
+  margin-bottom: 10px;
 }
 
-/* Estilos para la sección de tareas */
 .tasks-section {
-  margin-top: 20px; /* Espacio superior para separar del título */
+  margin-top: 20px;
 }
 
-/* Estilos para la lista de tareas */
 .tasks-list {
-  list-style: none; /* Quitamos los estilos de viñeta */
-  padding: 0; /* Quitamos el relleno predeterminado */
+  list-style: none;
+  padding: 0;
 }
 
 .tasks-list li {
-  margin-bottom: 10px; /* Espacio entre cada tarea */
+  margin-bottom: 10px;
 }
 
-/* Estilos para el botón de salida */
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.task-input {
+  height: 38px; /* Mismo tamaño que el botón */
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid #ccc;
+}
+
+.create-task-btn {
+  height: 38px; /* Mismo tamaño que el campo de entrada */
+  padding: 10px;
+  font-size: 16px;
+  background-color: hsla(160, 100%, 37%, 1);
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-task-btn:hover {
+  background-color: #e64a19;
+}
+
 .signout-btn {
-  padding: 10px 20px; /* Espaciado interno del botón */
-  font-size: 16px; /* Tamaño de la fuente del botón */
-  background-color: hsla(160, 100%, 37%, 1); /* Color de fondo del botón (rojo) */
-  color: white; /* Color del texto del botón */
-  border: none; /* Quitamos el borde del botón */
-  border-radius: 4px; /* Bordes redondeados del botón */
-  cursor: pointer; /* Cursor al pasar sobre el botón */
-  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: hsla(160, 100%, 37%, 1);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .signout-btn:hover {
-  background-color: #E64A19; /* Color de fondo del botón al pasar el cursor (rojo más oscuro) */
+  background-color: #e64a19;
 }
 </style>
