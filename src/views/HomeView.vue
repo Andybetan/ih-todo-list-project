@@ -20,6 +20,10 @@ const _addTask = async () => {
   taskTitle.value = '';
 };
 
+const deleteTask = async (taskId) => {
+  await tasksStore.deleteTask(taskId);
+};
+
 const signOut = async () => {
   // la lógica para cerrar sesión
   router.push({ name: 'signin' }); // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
@@ -32,7 +36,10 @@ const signOut = async () => {
     <section class="tasks-section">
       <span class="task-count">tasks: {{ tasks.length }}</span>
       <ul class="tasks-list">
-        <li v-for="task in tasks" :key="task.id">{{ task.title }}</li>
+        <li v-for="task in tasks" :key="task.id">
+          <span>{{ task.title }}</span>
+          <button @click="deleteTask(task.id)" class="delete-task-btn">Delete</button>
+        </li>
       </ul>
     </section>
     <div class="input-container">
@@ -77,6 +84,24 @@ const signOut = async () => {
 
 .tasks-list li {
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-task-btn {
+  padding: 6px 10px;
+  font-size: 14px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-task-btn:hover {
+  background-color: #d32f2f;
 }
 
 .input-container {
@@ -85,7 +110,7 @@ const signOut = async () => {
 }
 
 .task-input {
-  height: 38px; /* Mismo tamaño que el botón */
+  height: 38px;
   padding: 10px;
   font-size: 16px;
   border-radius: 4px 0 0 4px;
@@ -93,7 +118,7 @@ const signOut = async () => {
 }
 
 .create-task-btn {
-  height: 38px; /* Mismo tamaño que el campo de entrada */
+  height: 38px;
   padding: 10px;
   font-size: 16px;
   background-color: hsla(160, 100%, 37%, 1);
