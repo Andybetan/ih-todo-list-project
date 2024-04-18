@@ -33,26 +33,32 @@
 </script>
 
 <template>
-    <main class="signup-container">
-      <h1 class="signup-title">Sign Up</h1>
-      <form class="signup-form" @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="email" class="form-label">Email:</label>
-          <input type="email" id="email" class="form-input" v-model="email" required @input="validateEmail" />
-          <span v-if="emailError" class="error-message">Invalid email address</span>
-        </div>
-        <div class="form-group">
-          <label for="password" class="form-label">Password:</label>
-          <input type="password" id="password" class="form-input" v-model="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm" class="form-label">Confirm Password:</label>
-          <input type="password" id="confirm" class="form-input" v-model="confirm" required />
-          <span v-if="passwordMismatch" class="error-message">Passwords do not match</span>
-        </div>
-        <button type="submit" class="signup-btn">Sign Up</button>
-      </form>
-    </main>
+  <main class="signup-container">
+    <h1 class="signup-title">Sign Up</h1>
+    <form class="signup-form" @submit.prevent="handleSubmit">
+      <!-- Agregar un campo de correo electrónico -->
+      <div class="form-group">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" id="email" class="form-input" v-model="email" required @input="validateEmail" />
+        <span v-if="emailError" class="error-message">Invalid email address</span>
+      </div>
+      <!-- Agregar un campo de contraseña -->
+      <div class="form-group">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" id="password" class="form-input" v-model="password" required />
+      </div>
+      <!-- Agregar un campo de confirmación de contraseña -->
+      <div class="form-group">
+        <label for="confirm" class="form-label">Confirm Password:</label>
+        <input type="password" id="confirm" class="form-input" v-model="confirm" required />
+        <span v-if="passwordMismatch" class="error-message">Passwords do not match</span>
+      </div>
+      <!-- Agregar el botón "Sign Up" -->
+      <button type="submit" class="signup-btn">Sign Up</button>
+      <!-- Agregar el botón "Sign In" que lleva a la vista de inicio de sesión -->
+      <router-link to="/signin" class="signup-btn centered-text" style="background-color: hsla(160, 100%, 37%, 1);">Sign In</router-link>
+    </form>
+  </main>
 </template>
 
 <style scoped>
