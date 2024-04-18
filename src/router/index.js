@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import SignUpView from '@/views/SignUpView.vue' // Importa SignUpView
 
 import { useUserStore } from '@/stores/userStore'
 
@@ -16,11 +17,13 @@ const router = createRouter({
       name: 'signin',
       component: () => import('@/views/SignInView.vue')
     },
+
     {
-      path: '/singup',
-      name: 'singup',
-      component: () => import('@/views/SingUpView.vue')
+      path: '/signup', // Esta línea debería ser '/singup'
+      name: 'signup',
+      component: SignUpView // Usa SignUpView directamente
     },
+
     {
       path: '/about',
       name: 'about',
@@ -36,11 +39,13 @@ router.beforeEach(async (to, from, next) => {
     await userStore.fetchUser()
   }
 
-  if (userStore.user === null && to.name !== 'signin') {
-    next({ name: 'signin' })
+  if (userStore.user === null && to.name !== 'signin' && to.name !== 'signup') {
+    // Si el usuario no está autenticado y la ruta no es 'signin' ni 'signup',
+    // redirigir al usuario a la página de registro (SignUp)
+    next({ name: 'signup' });
   } else {
-    next()
+    next();
   }
-})
+});
 
-export default router
+export default router;

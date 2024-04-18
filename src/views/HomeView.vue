@@ -89,12 +89,15 @@ const signOut = async () => {
 .tasks-list {
   list-style: none;
   padding: 0;
+  margin-top: 20px;
+  
 }
 
 .task-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 5px;
 }
 
 .delete-task-btn {
