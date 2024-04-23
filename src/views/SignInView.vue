@@ -47,7 +47,7 @@ const validateEmail = () => {
 
 <style scoped>
 .signin-container {
-  max-width: 400px;
+  max-width: 300px;
   margin: 0 auto;
   padding: 2rem;
   background-color: var(--color-background);
@@ -86,8 +86,9 @@ const validateEmail = () => {
   border: 1px solid #ced4da; 
   border-radius: 4px;
   width: 100%; 
-  max-width: 300px; /* Establece el ancho máximo para mantenerlo igual que el campo de email */
+  max-width: 300px; /* Establece el ancho máximo */
   text-align: center; /* Centra el texto */
+  box-sizing: border-box; /* Incluye el padding y el borde en el ancho */
 }
 
 .signin-btn {

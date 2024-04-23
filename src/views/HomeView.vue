@@ -3,12 +3,14 @@ import { useTasksStore } from '@/stores/tasksStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore'; // Importar el store de usuario
 
 const router = useRouter();
 const tasksStore = useTasksStore();
 const { tasks } = storeToRefs(tasksStore);
 const taskTitle = ref('');
 const editingTaskId = ref(null); // Nuevo estado para almacenar el ID de la tarea en modo de edición
+const userStore = useUserStore(); // Acceder al store de usuario
 
 const _addTask = async () => {
   const task = {
@@ -39,8 +41,9 @@ const saveEditedTask = async (task) => {
 };
 
 const signOut = async () => {
-  // la lógica para cerrar sesión
-  router.push({ name: 'signin' }); // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
+  await userStore.logout(); // Llama a la función logout del store de usuario
+  console.log('Se ha cerrado sesión correctamente.');
+  router.push({ name: 'signin' });
 };
 </script>
 

@@ -1,35 +1,41 @@
 <script setup>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useUserStore } from '@/stores/userStore';
-  
-  const router = useRouter();
-  const userStore = useUserStore();
-  
-  const username = ref('');
-  const password = ref('');
-  const confirm = ref('');
-  const email = ref('');
-  const emailError = ref(false);
-  const passwordMismatch = ref(false); // Agregamos una variable para controlar si las contraseñas no coinciden
-  
-  const handleSubmit = async () => {
-    // Verificar si las contraseñas coinciden
-    if (password.value !== confirm.value) {
-      passwordMismatch.value = true; // Mostrar mensaje de error si las contraseñas no coinciden
-      return; // Detener la ejecución del método si las contraseñas no coinciden
-    }
-    
-    if (!emailError.value) {
-      await userStore.signUp(email.value, username.value, password.value);
-      router.push({ name: 'home' }); // Redirigir al usuario a la página HomeView
-    }
-  };
-  
-  const validateEmail = () => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    emailError.value = !regex.test(email.value);
-  };
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const username = ref('');
+const password = ref('');
+const confirm = ref('');
+const email = ref('');
+const emailError = ref(false);
+const passwordMismatch = ref(false);
+
+const handleSubmit = async () => {
+  if (password.value !== confirm.value) {
+    passwordMismatch.value = true;
+    return;
+  }
+
+  // Verificar que la longitud de la contraseña sea al menos 6 caracteres
+  if (password.value.length < 6) {
+    // Mostrar un mensaje de error si la contraseña es demasiado corta
+    // Aquí podrías mostrar un mensaje al usuario para informarle que la contraseña debe tener al menos 6 caracteres
+    return;
+  }
+
+  if (!emailError.value) {
+    await userStore.signUp(email.value, username.value, password.value);
+    router.push({ name: 'home' });
+  }
+};
+
+const validateEmail = () => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  emailError.value = !regex.test(email.value);
+};
 </script>
 
 <template>
@@ -46,6 +52,7 @@
       <div class="form-group">
         <label for="password" class="form-label">Password:</label>
         <input type="password" id="password" class="form-input" v-model="password" required />
+        <span v-if="password.length < 6" class="error-message">Password must be at least 6 characters long</span>
       </div>
       <!-- Agregar un campo de confirmación de contraseña -->
       <div class="form-group">
