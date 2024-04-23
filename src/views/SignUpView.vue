@@ -6,7 +6,6 @@ import { useUserStore } from '@/stores/userStore';
 const router = useRouter();
 const userStore = useUserStore();
 
-const username = ref('');
 const password = ref('');
 const confirm = ref('');
 const email = ref('');
@@ -22,13 +21,20 @@ const handleSubmit = async () => {
   // Verificar que la longitud de la contraseña sea al menos 6 caracteres
   if (password.value.length < 6) {
     // Mostrar un mensaje de error si la contraseña es demasiado corta
-    // Aquí podrías mostrar un mensaje al usuario para informarle que la contraseña debe tener al menos 6 caracteres
+    passwordMismatch.value = true;
     return;
   }
 
-  if (!emailError.value) {
-    await userStore.signUp(email.value, username.value, password.value);
-    router.push({ name: 'home' });
+   // Verificar si hay errores en el email
+   if (!emailError.value) {
+    try {
+      await userStore.signUp(email.value, password.value);
+      console.log('Nuevo usuario creado correctamente');
+      router.push({ name: 'home' });
+    } catch (error) {
+      // Manejar cualquier error que pueda surgir durante el registro
+      console.error('Error al crear un nuevo usuario:', error);
+    }
   }
 };
 
