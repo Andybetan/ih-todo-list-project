@@ -40,6 +40,11 @@ const saveEditedTask = async (task) => {
   editingTaskId.value = null; // Desactivar el modo de edición después de guardar
 };
 
+const toggleFavorite = async (task) => {
+  task.is_favorite = !task.is_favorite; // Cambiar el estado de favorito
+  await tasksStore.updateTask(task.id, task);
+};
+
 const signOut = async () => {
   await userStore.logout(); // Llama a la función logout del store de usuario
   console.log('Se ha cerrado sesión correctamente.');
@@ -61,11 +66,11 @@ const signOut = async () => {
           <div class="task-item">
             <div>
               <input type="checkbox" v-model="task.is_complete" @change="updateTask(task)">
-              <span :class="{ 'completed-task': task.is_complete }" v-if="task.id !== editingTaskId">{{ task.title }}</span>
+              <span :class="{ 'completed-task': task.is_complete, 'favorite-task': task.is_favorite }" v-if="task.id !== editingTaskId">{{ task.title }}</span>
               <!-- Campo de entrada para editar la tarea -->
               <input v-else type="text" v-model="task.title" @keydown.enter.prevent="saveEditedTask(task)" @blur="saveEditedTask(task)" class="task-input" />
             </div>
-            <!-- Botones de editar y eliminar -->
+            <!-- Botones de editar, eliminar y favoritos -->
             <div>
               <button @click="editTask(task)" class="edit-task-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -83,8 +88,18 @@ const signOut = async () => {
                   <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12m-9 -3v-1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1" />
                 </svg>
               </button>
+              <button @click="toggleFavorite(task)" class="favorite-task-btn">
+                <svg v-if="task.is_favorite" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 3l2.23 6.43h6.31l-5.17 3.73 2.32 6.44L12 16.29l-5.68 4.31 2.32-6.44L3.46 9.43h6.31z" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 3l2.23 6.43h6.31l-5.17 3.73 2.32 6.44L12 16.29l-5.68 4.31 2.32-6.44L3.46 9.43h6.31z" />
+                </svg>
+              </button>
             </div>
-            <!-- Fin de botones de editar y eliminar -->
+            <!-- Fin de botones de editar, eliminar y favoritos -->
           </div>
         </li>
       </ul>
@@ -92,8 +107,6 @@ const signOut = async () => {
     <button class="signout-btn" @click="signOut">Sign Out</button>
   </main>
 </template>
-
-
 
 <style scoped>
 .todo-list-container {
@@ -136,7 +149,8 @@ const signOut = async () => {
 }
 
 .delete-task-btn,
-.edit-task-btn {
+.edit-task-btn,
+.favorite-task-btn {
   padding: 6px 10px;
   font-size: 14px;
   border: none;
@@ -146,7 +160,6 @@ const signOut = async () => {
   margin-right: 8px;
   color: rgb(250, 251, 252);
   background-color: transparent;
-  
 }
 
 .delete-task-btn:hover {
@@ -157,6 +170,14 @@ const signOut = async () => {
 .edit-task-btn:hover {
   background-color: #ecf1c8; /* Color amarillo para el botón de editar */
   color: #828860;
+}
+
+.favorite-task-btn:hover {
+  background-color: #fbc02d; /* Color para el botón de favoritos */
+}
+
+.favorite-task {
+  background-color: #fbc02d; /* Color de fondo cuando la tarea es favorita */
 }
 
 .input-container {

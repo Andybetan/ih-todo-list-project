@@ -43,11 +43,21 @@ export const useTasksStore = defineStore("tasks", () => {
     }
   }
 
+  async function toggleFavorite(taskId, isFavorite) {
+    try {
+      const updatedTask = { is_favorite: isFavorite }; // Create an object with the updated field
+      await updateTask(taskId, updatedTask); // Call the existing updateTask method
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return {
     tasks,
     fetchTasks,
     createNewTask,
     deleteTask,
     updateTask,
+    toggleFavorite,
   };
 });
