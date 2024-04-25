@@ -16,13 +16,15 @@
 header {
 	line-height: 1.5;
 	max-height: 100vh;
+	min-width: 300px;
 }
 
 nav {
 	width: 100%;
-	font-size: 12px;
+	font-size: 14px;
 	text-align: center;
 	margin-top: 2rem;
+	margin-bottom: 5rem;
 }
 
 nav a.router-link-exact-active {

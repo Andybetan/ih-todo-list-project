@@ -50,6 +50,12 @@ const signOut = async () => {
   console.log('Se ha cerrado sesión correctamente.');
   router.push({ name: 'signin' });
 };
+
+onMounted(() => {
+  tasksStore.fetchTasks();
+});
+
+
 </script>
 
 <template>
@@ -57,7 +63,7 @@ const signOut = async () => {
     <h1 class="todo-list-title">To-do list</h1>
     <div class="input-container">
       <input type="text" v-model="taskTitle" placeholder="Enter task title" class="task-input">
-      <button class="create-task-btn" @click="_addTask">Create Task</button>
+      <button class="create-task-btn" @click="_addTask"><p id="big">Create Task</p><p id="small">Create</p></button>
     </div>
     <section class="tasks-section">
       <span class="task-count">tasks: {{ tasks.length }}</span>
@@ -88,7 +94,7 @@ const signOut = async () => {
                   <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12m-9 -3v-1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1" />
                 </svg>
               </button>
-              <button @click="toggleFavorite(task)" class="favorite-task-btn">
+              <button @click="toggleFavorite(task)" class="favorite-task-btn" :class="{ 'favorite': task.is_favorite }">
                 <svg v-if="task.is_favorite" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                   <path d="M12 3l2.23 6.43h6.31l-5.17 3.73 2.32 6.44L12 16.29l-5.68 4.31 2.32-6.44L3.46 9.43h6.31z" />
@@ -110,29 +116,30 @@ const signOut = async () => {
 
 <style scoped>
 .todo-list-container {
-  background-image: #b3e5fc;
+  
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  min-width: 300px;
 }
 
 .todo-list-title {
   font-family: 'Roboto', sans-serif;
   font-size: 36px;
   font-weight: bold;
-  color: #333;
+  color: #666;
   margin-bottom: 20px;
 }
 
 .task-count {
   font-family: 'Roboto', sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   color: #666;
   margin-bottom: 10px;
 }
 
 .tasks-section {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .tasks-list {
@@ -143,9 +150,9 @@ const signOut = async () => {
 
 .task-item {
   display: flex;
-  justify-content: space-between;
+  justify-content:space-between;
   align-items: center;
-  margin: 5px;
+  margin: 0px;
 }
 
 .delete-task-btn,
@@ -157,7 +164,7 @@ const signOut = async () => {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 8px;
+  margin:0;
   color: rgb(250, 251, 252);
   background-color: transparent;
 }
@@ -168,21 +175,23 @@ const signOut = async () => {
 }
 
 .edit-task-btn:hover {
-  background-color: #ecf1c8; /* Color amarillo para el botón de editar */
-  color: #828860;
+  background-color: #c2f9f0; /* Color amarillo para el botón de editar */
+  color: #5ef6e2;
 }
 
 .favorite-task-btn:hover {
-  background-color: #fbc02d; /* Color para el botón de favoritos */
+  background-color: #eed594; /* Color para el botón de favoritos */
+  color: #f3bc32;
 }
 
-.favorite-task {
-  background-color: #fbc02d; /* Color de fondo cuando la tarea es favorita */
+.favorite {
+  color: #fbc02d; /* color para la estrella */
 }
 
 .input-container {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .task-input {
