@@ -62,12 +62,12 @@ const validateEmail = () => {
       </div>
       <!-- Agregar un campo de confirmación de contraseña -->
       <div class="form-group">
-        <label for="confirm" class="form-label">Confirm Password:</label>
+        <label for="confirm" class="form-label">Confirm password:</label>
         <input type="password" id="confirm" class="form-input" v-model="confirm" required />
         <span v-if="passwordMismatch" class="error-message">Passwords do not match</span>
       </div>
       <!-- Agregar el botón "Sign Up" -->
-      <button type="submit" class="signup-btn">Sign Up</button>
+      <button type="submit" class="signup-btn">Create account</button>
       <!-- Agregar el botón "Sign In" que lleva a la vista de inicio de sesión -->
       <router-link to="/signin" class="signup-btn centered-text" style="background-color: hsla(160, 100%, 37%, 1);">Sign In</router-link>
     </form>
@@ -87,7 +87,7 @@ const validateEmail = () => {
 .signup-title {
   text-align: center;
   font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .signup-form {
@@ -127,14 +127,15 @@ const validateEmail = () => {
   cursor: pointer;
   transition: background-color 0.3s ease;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .signup-btn:hover {
-  background-color: #2d7acc;
+  background-color: #7eb6f1;
 }
 
 .error-message {
-  color: #ff0000;
+  color: #f48a8a;
   font-size: 0.8rem;
 }
 </style>

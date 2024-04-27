@@ -1,13 +1,14 @@
 <template>
 	<header>
-		<div class="wrapper">
-			<nav>
-				<RouterLink to="/">Home</RouterLink>
-				<RouterLink to="/about">About</RouterLink>
-				<RouterLink to="/signup">Sign up</RouterLink>
-			</nav>
-		</div>
-	</header>
+  <div class="wrapper">
+    <nav>
+		<RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/about">About</RouterLink>
+      <!-- Utiliza la directiva v-if para mostrar el enlace "Sign up" solo si el usuario no está en la vista de "Home" ni en la vista de "About" -->
+      <RouterLink v-if="$route.name !== 'home' && $route.name !== 'about'" to="/signup">Sign up</RouterLink>
+    </nav>
+  </div>
+</header>
 
 	<RouterView />
 </template>
@@ -24,7 +25,7 @@ nav {
 	font-size: 14px;
 	text-align: center;
 	margin-top: 2rem;
-	margin-bottom: 5rem;
+	margin-bottom: 2rem;
 }
 
 nav a.router-link-exact-active {

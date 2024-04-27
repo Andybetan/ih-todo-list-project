@@ -40,7 +40,7 @@ const validateEmail = () => {
         <label for="password" class="form-label">Password:</label>
         <input type="password" id="password" class="form-input" v-model="password" required autocomplete="current-password" />
       </div>
-      <button type="submit" class="signin-btn">Sign In</button>
+      <button type="submit" class="signin-btn">Log In</button>
     </form>
   </main>
 </template>
@@ -105,11 +105,11 @@ const validateEmail = () => {
 }
 
 .signin-btn:hover {
-  background-color: #2d7acc; 
+  background-color: #7eb6f1; 
 }
 
 .error-message {
-  color: #ff0000; /* Color rojo para el mensaje de error */
+  color: #f48a8a; /* Color rojo para el mensaje de error */
   font-size: 0.8rem; /* Tamaño de fuente más pequeño para el mensaje de error */
 }
 </style>
