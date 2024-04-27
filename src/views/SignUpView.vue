@@ -30,7 +30,7 @@ const handleSubmit = async () => {
     try {
       await userStore.signUp(email.value, password.value);
       console.log('Nuevo usuario creado correctamente');
-      router.push({ name: 'home' });
+      router.push({ name: 'signin' });
     } catch (error) {
       // Manejar cualquier error que pueda surgir durante el registro
       console.error('Error al crear un nuevo usuario:', error);
