@@ -69,10 +69,6 @@
   margin-top: 20px;
   transition: background-color 0.3s;
 }
-
-.github-link:hover {
-  background-color: #0552a5;
-}
   
   .page-footer {
 	text-align: center;

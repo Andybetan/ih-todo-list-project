@@ -126,14 +126,13 @@ onMounted(() => {
                 </svg>
               </button>
             </div>
-            <!-- Fin de botones de editar, eliminar y favoritos -->
           </div>
         </li>
       </ul>
     </section>
     <button class="signout-btn" @click="signOut">Sign Out</button>
     <section class="user-info">
-      <p v-if="userStore.user">{{ `Welcome, ${userStore.user.email}` }}</p> <!-- Mostrar el correo electrónico en lugar del nombre -->
+      <p v-if="userStore.user">{{ `Welcome, ${userStore.user.email}` }}</p> 
     </section>
   </main>
 </template>
@@ -200,9 +199,9 @@ onMounted(() => {
 }
 
 .edit-task-btn:hover {
-  background-color: #c2f9f0;
+  background-color: #61d2d2;
   /* Color amarillo para el botón de editar */
-  color: #5ef6e2;
+  color: #13a491;
 }
 
 .favorite-task-btn:hover {
