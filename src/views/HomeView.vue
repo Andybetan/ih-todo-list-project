@@ -111,7 +111,7 @@ onMounted(() => {
                   <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12m-9 -3v-1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1" />
                 </svg>
               </button>
-              <button @click="toggleFavorite(task)" class="favorite-task-btn" :class="{ 'favorite': task.is_favorite }">
+              <button @click="toggleFavorite(task)" class="favorite-task-btn" :class="{ 'favorite': task.is_favorite, 'rotate': task.is_favorite }">
                 <svg v-if="task.is_favorite" xmlns="http://www.w3.org/2000/svg"
                   class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                   stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -208,11 +208,16 @@ onMounted(() => {
   background-color: #eed594;
   /* Color para el botón de favoritos */
   color: #f3bc32;
+  transition: transform 0.3s ease;
 }
 
 .favorite {
   color: #fbc02d;
   /* color para la estrella */
+}
+
+.rotate {
+  transform: rotate(360deg);
 }
 
 .input-container {
@@ -274,7 +279,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   padding: 10px 20px;
-  color: #666;
+  color: white;
   margin-top: 20px;
 }
 </style>

@@ -29,7 +29,7 @@ const validateEmail = () => {
 
 <template>
   <main class="signin-container">
-    <h1 class="signin-title">Sign In</h1>
+    <h1 class="signin-title">Welcome</h1>
     <form class="signin-form" @submit.prevent="signIn">
       <div class="form-group">
         <label for="username" class="form-label">Email</label>
