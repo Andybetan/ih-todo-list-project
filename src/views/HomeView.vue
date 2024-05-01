@@ -111,7 +111,8 @@ onMounted(() => {
                   <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12m-9 -3v-1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1" />
                 </svg>
               </button>
-              <button @click="toggleFavorite(task)" class="favorite-task-btn" :class="{ 'favorite': task.is_favorite, 'rotate': task.is_favorite }">
+              <button @click="toggleFavorite(task)" class="favorite-task-btn"
+                :class="{ 'favorite': task.is_favorite, 'rotate': task.is_favorite }">
                 <svg v-if="task.is_favorite" xmlns="http://www.w3.org/2000/svg"
                   class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                   stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -132,7 +133,7 @@ onMounted(() => {
     </section>
     <button class="signout-btn" @click="signOut">Sign Out</button>
     <section class="user-info">
-      <p v-if="userStore.user">{{ `Welcome, ${userStore.user.email}` }}</p> 
+      <p v-if="userStore.user" class="custom-animation">{{ `Welcome, ${userStore.user.email}` }}</p>
     </section>
   </main>
 </template>
@@ -281,5 +282,20 @@ onMounted(() => {
   padding: 10px 20px;
   color: white;
   margin-top: 20px;
+}
+
+.custom-animation {
+  animation: slideIn 2s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
