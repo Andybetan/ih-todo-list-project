@@ -28,7 +28,7 @@
 		  <li class="about-info">Build tool: Vite</li>
 		  <li class="about-info">Routing: Vue Router</li>
 		  <li class="about-info">State management: Pinia</li>
-		  <li class="about-info">CSS personalizado: Estilos propios y técnicas de diseño creadas específicamente para el proyecto utilizando reglas de CSS estándar, selectores avanzados, y enfoques de diseño modular.</li>
+		  <li class="about-info">Custom CSS: Own styles and design techniques created specifically for the project using standard CSS rules, advanced selectors, and modular design approaches.</li>
 		</ul>
 	  </section>
 	</main>
