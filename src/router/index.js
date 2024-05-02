@@ -35,12 +35,14 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
 
+  // Si el usuario aún no ha sido obtenido, espera a que se obtenga
   if (userStore.user === undefined) {
     await userStore.fetchUser();
   }
 
+  // Si no hay usuario y no está en la página de inicio de sesión ni de registro, redirige a la página de inicio de sesión
   if (userStore.user === null && to.name !== "signin" && to.name !== "signup") {
-    next({ name: "signup" });
+    next({ name: "signin" });
   } else {
     next();
   }

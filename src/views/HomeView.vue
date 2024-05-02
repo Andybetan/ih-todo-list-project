@@ -76,7 +76,7 @@ onMounted(() => {
       </button>
     </div>
     <section class="tasks-section">
-      <span class="task-count">tasks: {{ tasks.length }}</span>
+      <span class="task-count">Total tasks: {{ tasks.length }}</span>
       <ul class="tasks-list">
         <li v-for="task in tasks" :key="task.id">
           <div class="task-item">

@@ -1,17 +1,44 @@
+<script>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+export default {
+  setup() {
+    const route = useRoute();
+
+    const shouldShowHomeLink = computed(() => {
+      return route.name !== undefined && !['signin', 'signup'].includes(route.name.toString());
+    });
+
+    const shouldShowAboutLink = computed(() => {
+      return route.name !== undefined && !['signin', 'signup'].includes(route.name.toString());
+    });
+
+    const shouldShowSignupLink = computed(() => {
+      return route.name !== undefined && !['signup', 'home', 'about'].includes(route.name.toString());
+    });
+
+    return {
+      shouldShowHomeLink,
+      shouldShowAboutLink,
+      shouldShowSignupLink
+    };
+  }
+};
+</script>
 <template>
 	<header>
-		<div class="wrapper">
-			<nav>
-
-				<RouterLink v-if="!['signin', 'signup'].includes($route.name)" to="/">Home</RouterLink>
-				<RouterLink v-if="!['signin', 'signup'].includes($route.name)" to="/about">About</RouterLink>
-				<RouterLink v-if="!['signup', 'home', 'about'].includes($route.name)" to="/signup">Sign up</RouterLink>
-			</nav>
-		</div>
+	  <div class="wrapper">
+		<nav>
+		  <RouterLink v-if="shouldShowHomeLink" to="/">Home</RouterLink>
+		  <RouterLink v-if="shouldShowAboutLink" to="/about">About</RouterLink>
+		  <RouterLink v-if="shouldShowSignupLink" to="/signup">Sign up</RouterLink>
+		</nav>
+	  </div>
 	</header>
-
+	
 	<RouterView />
-</template>
+  </template>
 
 <style scoped>
 header {
