@@ -1,17 +1,15 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import { fetchActualUser, createNewUser, logIn, signOut } from '@/api/userApi';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { fetchActualUser, createNewUser, logIn, signOut } from "@/api/userApi";
 
-export const useUserStore = defineStore('user', () => {
-  // State
+export const useUserStore = defineStore("user", () => {
   const user = ref(undefined);
 
-  // Actions
   async function fetchUser() {
     try {
       user.value = await fetchActualUser();
     } catch (error) {
-      if (error.code === '401') {
+      if (error.code === "401") {
         user.value = null;
         return;
       }
@@ -37,19 +35,18 @@ export const useUserStore = defineStore('user', () => {
   async function logout() {
     try {
       await signOut();
-      user.value = null; // Limpiar el estado del usuario después de cerrar sesión
+      user.value = null;
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error("Error al cerrar sesión:", error);
     }
   }
 
   return {
-    // State
     user,
-    // Actions
+
     fetchUser,
     signUp,
     signIn,
-    logout
+    logout,
   };
 });

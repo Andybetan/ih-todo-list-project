@@ -1,14 +1,14 @@
 <template>
 	<header>
-  <div class="wrapper">
-    <nav>
-		<RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-      <!-- Utiliza la directiva v-if para mostrar el enlace "Sign up" solo si el usuario no está en la vista de "Home" ni en la vista de "About" -->
-      <RouterLink v-if="$route.name !== 'home' && $route.name !== 'about'" to="/signup">Sign up</RouterLink>
-    </nav>
-  </div>
-</header>
+		<div class="wrapper">
+			<nav>
+
+				<RouterLink v-if="!['signin', 'signup'].includes($route.name)" to="/">Home</RouterLink>
+				<RouterLink v-if="!['signin', 'signup'].includes($route.name)" to="/about">About</RouterLink>
+				<RouterLink v-if="!['signup', 'home', 'about'].includes($route.name)" to="/signup">Sign up</RouterLink>
+			</nav>
+		</div>
+	</header>
 
 	<RouterView />
 </template>

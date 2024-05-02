@@ -3,14 +3,14 @@ import { useTasksStore } from '@/stores/tasksStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/userStore'; // Importar el store de usuario
+import { useUserStore } from '@/stores/userStore';
 
 const router = useRouter();
 const tasksStore = useTasksStore();
 const { tasks } = storeToRefs(tasksStore);
 const taskTitle = ref('');
-const editingTaskId = ref(null); // Nuevo estado para almacenar el ID de la tarea en modo de edición
-const userStore = useUserStore(); // Acceder al store de usuario
+const editingTaskId = ref(null);
+const userStore = useUserStore();
 
 const _addTask = async () => {
   try {
@@ -39,21 +39,21 @@ const updateTask = async (task) => {
 };
 
 const editTask = async (task) => {
-  editingTaskId.value = task.id; // Activar el modo de edición para esta tarea
+  editingTaskId.value = task.id;
 };
 
 const saveEditedTask = async (task) => {
   await tasksStore.updateTask(task.id, task);
-  editingTaskId.value = null; // Desactivar el modo de edición después de guardar
+  editingTaskId.value = null;
 };
 
 const toggleFavorite = async (task) => {
-  task.is_favorite = !task.is_favorite; // Cambiar el estado de favorito
+  task.is_favorite = !task.is_favorite;
   await tasksStore.updateTask(task.id, task);
 };
 
 const signOut = async () => {
-  await userStore.logout(); // Llama a la función logout del store de usuario
+  await userStore.logout();
   console.log('Se ha cerrado sesión correctamente.');
   router.push({ name: 'signin' });
 };
@@ -84,11 +84,9 @@ onMounted(() => {
               <input type="checkbox" v-model="task.is_complete" @change="updateTask(task)">
               <span :class="{ 'completed-task': task.is_complete, 'favorite-task': task.is_favorite }"
                 v-if="task.id !== editingTaskId">{{ task.title }}</span>
-              <!-- Campo de entrada para editar la tarea -->
               <input v-else type="text" v-model="task.title" @keydown.enter.prevent="saveEditedTask(task)"
                 @blur="saveEditedTask(task)" class="task-input" />
             </div>
-            <!-- Botones de editar, eliminar y favoritos -->
             <div>
               <button @click="editTask(task)" class="edit-task-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24"
@@ -195,26 +193,22 @@ onMounted(() => {
 
 .delete-task-btn:hover {
   background-color: rgb(245, 172, 172);
-  /* Color rojo para el botón de eliminar */
   color: rgb(237, 86, 86);
 }
 
 .edit-task-btn:hover {
   background-color: #61d2d2;
-  /* Color amarillo para el botón de editar */
   color: #13a491;
 }
 
 .favorite-task-btn:hover {
   background-color: #eed594;
-  /* Color para el botón de favoritos */
   color: #f3bc32;
   transition: transform 0.3s ease;
 }
 
 .favorite {
   color: #fbc02d;
-  /* color para la estrella */
 }
 
 .rotate {
@@ -293,6 +287,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

@@ -1,12 +1,15 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { createNewTaskAPI, fetchAllTasks, deleteTaskAPI, updateTaskAPI } from "@/api/tasksApi";
+import {
+  createNewTaskAPI,
+  fetchAllTasks,
+  deleteTaskAPI,
+  updateTaskAPI,
+} from "@/api/tasksApi";
 
 export const useTasksStore = defineStore("tasks", () => {
-  // State
   const tasks = ref([]);
 
-  // Actions
   async function fetchTasks() {
     try {
       const data = await fetchAllTasks();
@@ -45,8 +48,8 @@ export const useTasksStore = defineStore("tasks", () => {
 
   async function toggleFavorite(taskId, isFavorite) {
     try {
-      const updatedTask = { is_favorite: isFavorite }; // Create an object with the updated field
-      await updateTask(taskId, updatedTask); // Call the existing updateTask method
+      const updatedTask = { is_favorite: isFavorite };
+      await updateTask(taskId, updatedTask);
     } catch (err) {
       console.error(err);
     }

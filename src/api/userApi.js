@@ -1,4 +1,4 @@
-import { supabase } from '@/api/supabase';
+import { supabase } from "@/api/supabase";
 
 export const fetchActualUser = async () => {
   const { data } = await supabase.auth.getSession();
@@ -18,7 +18,7 @@ export const createNewUser = async (email, password) => {
 export const logIn = async (email, password) => {
   const {
     data: { user },
-    error
+    error,
   } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {

@@ -16,8 +16,8 @@ const emailError = ref(false)
 const signIn = async () => {
   if (!emailError.value) {
     await userStore.signIn(user.value, password.value)
-    await tasksStore.fetchTasks() // Cargar tareas después de iniciar sesión
-    router.push({ name: 'home' }) // Redirigir al usuario a la página HomeView
+    await tasksStore.fetchTasks()
+    router.push({ name: 'home' })
   }
 }
 
@@ -33,12 +33,14 @@ const validateEmail = () => {
     <form class="signin-form" @submit.prevent="signIn">
       <div class="form-group">
         <label for="username" class="form-label">Email</label>
-        <input type="email" id="username" class="form-input" v-model="user" required @input="validateEmail" autocomplete="email" />
+        <input type="email" id="username" class="form-input" v-model="user" required @input="validateEmail"
+          autocomplete="email" />
         <span v-if="emailError" class="error-message">Invalid email address</span>
       </div>
       <div class="form-group">
         <label for="password" class="form-label">Password:</label>
-        <input type="password" id="password" class="form-input" v-model="password" required autocomplete="current-password" />
+        <input type="password" id="password" class="form-input" v-model="password" required
+          autocomplete="current-password" />
       </div>
       <button type="submit" class="signin-btn">Log In</button>
     </form>
@@ -55,7 +57,7 @@ const validateEmail = () => {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 
 .signin-title {
@@ -67,12 +69,12 @@ const validateEmail = () => {
 .signin-form {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 
 .form-group {
   margin-bottom: 1rem;
-  text-align: center; 
+  text-align: center;
 }
 
 .form-label {
@@ -83,33 +85,33 @@ const validateEmail = () => {
 .form-input {
   padding: 0.5rem;
   font-size: 1rem;
-  border: 1px solid #ced4da; 
+  border: 1px solid #ced4da;
   border-radius: 4px;
-  width: 100%; 
-  max-width: 300px; /* Establece el ancho máximo */
-  text-align: center; /* Centra el texto */
-  box-sizing: border-box; /* Incluye el padding y el borde en el ancho */
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .signin-btn {
   padding: 0.5rem;
   font-size: 1rem;
-  background-color: var(--vt-c-black); 
-  color: var(--vt-c-white); 
+  background-color: var(--vt-c-black);
+  color: var(--vt-c-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 100%; 
-  max-width: 300px; 
+  width: 100%;
+  max-width: 300px;
 }
 
 .signin-btn:hover {
-  background-color: #7eb6f1; 
+  background-color: #7eb6f1;
 }
 
 .error-message {
-  color: #f48a8a; /* Color rojo para el mensaje de error */
-  font-size: 0.8rem; /* Tamaño de fuente más pequeño para el mensaje de error */
+  color: #f48a8a;
+  font-size: 0.8rem;
 }
 </style>

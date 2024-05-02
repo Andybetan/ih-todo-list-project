@@ -60,7 +60,7 @@ export const updateTaskAPI = async (taskId, updatedTask) => {
       .update({
         title: updatedTask.title,
         is_complete: updatedTask.is_complete,
-        is_favorite: updatedTask.is_favorite // Incluir is_favorite en la actualización
+        is_favorite: updatedTask.is_favorite 
       })
       .eq('id', taskId);
 

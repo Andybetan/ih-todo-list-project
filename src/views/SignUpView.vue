@@ -25,8 +25,8 @@ const handleSubmit = async () => {
     return;
   }
 
-   // Verificar si hay errores en el email
-   if (!emailError.value) {
+  // Verificar si hay errores en el email
+  if (!emailError.value) {
     try {
       await userStore.signUp(email.value, password.value);
       console.log('Nuevo usuario creado correctamente');
@@ -69,7 +69,8 @@ const validateEmail = () => {
       <!-- Agregar el botón "Sign Up" -->
       <button type="submit" class="signup-btn">Create account</button>
       <!-- Agregar el botón "Sign In" que lleva a la vista de inicio de sesión -->
-      <router-link to="/signin" class="signup-btn centered-text" style="background-color: hsla(160, 100%, 37%, 1);">Sign In</router-link>
+      <router-link to="/signin" class="signup-btn centered-text" style="background-color: hsla(160, 100%, 37%, 1);">Sign
+        In</router-link>
     </form>
   </main>
 </template>
@@ -96,7 +97,8 @@ const validateEmail = () => {
 }
 
 .form-group {
-  margin-bottom: 1rem; /* Espacio en blanco uniforme entre grupos */
+  margin-bottom: 1rem;
+  /* Espacio en blanco uniforme entre grupos */
 }
 
 .form-label {
@@ -110,7 +112,8 @@ const validateEmail = () => {
   border: 1px solid #ced4da;
   border-radius: 4px;
   width: 100%;
-  text-align: center !important; /* Alineación del texto centrada */
+  text-align: center !important;
+  /* Alineación del texto centrada */
 }
 
 .centered-text {
