@@ -6,8 +6,8 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-text: var(--vt-c-black);
+  --color-background: var(--vt-c-black);
+    --color-text: var(--vt-c-white);
   --section-gap: 160px;
 }
 
