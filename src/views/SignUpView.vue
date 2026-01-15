@@ -11,8 +11,14 @@ const confirm = ref('');
 const email = ref('');
 const emailError = ref(false);
 const passwordMismatch = ref(false);
+const signupError = ref('');
+const signupSuccess = ref(false);
 
 const handleSubmit = async () => {
+  signupError.value = '';
+  signupSuccess.value = false;
+  passwordMismatch.value = false;
+
   if (password.value !== confirm.value) {
     passwordMismatch.value = true;
     return;
@@ -20,7 +26,6 @@ const handleSubmit = async () => {
 
   // Verificar que la longitud de la contraseña sea al menos 6 caracteres
   if (password.value.length < 6) {
-    // Mostrar un mensaje de error si la contraseña es demasiado corta
     passwordMismatch.value = true;
     return;
   }
@@ -29,10 +34,14 @@ const handleSubmit = async () => {
   if (!emailError.value) {
     try {
       await userStore.signUp(email.value, password.value);
+      signupSuccess.value = true;
       console.log('Nuevo usuario creado correctamente');
-      router.push({ name: 'signin' });
+      // Esperar un momento antes de redirigir para que el usuario vea el mensaje
+      setTimeout(() => {
+        router.push({ name: 'signin' });
+      }, 1500);
     } catch (error) {
-      // Manejar cualquier error que pueda surgir durante el registro
+      signupError.value = error.message || 'Error al crear la cuenta. Intenta nuevamente.';
       console.error('Error al crear un nuevo usuario:', error);
     }
   }
@@ -66,6 +75,9 @@ const validateEmail = () => {
         <input type="password" id="confirm" class="form-input" v-model="confirm" required />
         <span v-if="passwordMismatch" class="error-message">Passwords do not match</span>
       </div>
+      <!-- Mensajes de éxito y error -->
+      <span v-if="signupSuccess" class="success-message">¡Cuenta creada exitosamente! Redirigiendo...</span>
+      <span v-if="signupError" class="error-message">{{ signupError }}</span>
       <!-- Agregar el botón "Sign Up" -->
       <button type="submit" class="signup-btn">Create account</button>
       <!-- Agregar el botón "Sign In" que lleva a la vista de inicio de sesión -->
@@ -140,5 +152,14 @@ const validateEmail = () => {
 .error-message {
   color: #f48a8a;
   font-size: 0.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.success-message {
+  color: #42b883;
+  font-size: 0.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 </style>

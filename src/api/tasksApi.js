@@ -12,17 +12,34 @@ const getCurrentUser = async () => {
 };
 
 // Obtener todas las tareas del usuario actual
+// Ordena por: favoritos primero, luego por prioridad (high > normal > low), luego por fecha
 export const fetchAllTasks = async () => {
   try {
     const user = await getCurrentUser();
     const { data, error } = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      .eq('user_id', user.id);
 
     if (error) throw error;
-    return data || [];
+    
+    // Ordenar en el cliente: favoritos primero, luego por prioridad, luego por fecha
+    const sorted = (data || []).sort((a, b) => {
+      // Primero por favorito
+      if (a.favorite && !b.favorite) return -1;
+      if (!a.favorite && b.favorite) return 1;
+      
+      // Luego por prioridad (high > normal > low)
+      const priorityOrder = { high: 3, normal: 2, low: 1 };
+      const aPriority = priorityOrder[a.priority || 'normal'] || 2;
+      const bPriority = priorityOrder[b.priority || 'normal'] || 2;
+      if (aPriority !== bPriority) return bPriority - aPriority;
+      
+      // Finalmente por fecha (más reciente primero)
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+    
+    return sorted;
   } catch (error) {
     console.error('Error fetching tasks:', error);
     throw error;
@@ -38,6 +55,8 @@ export const createNewTaskAPI = async (task) => {
       .insert([{ 
         title: task.title, 
         completed: task.completed || false,
+        favorite: task.favorite || false,
+        priority: task.priority || 'normal',
         user_id: user.id
       }])
       .select();
@@ -67,7 +86,7 @@ export const deleteTaskAPI = async (taskId) => {
   }
 };
 
-// Actualizar tarea (title y/o completed)
+// Actualizar tarea (title, completed, favorite, priority)
 export const updateTaskAPI = async (taskId, updates) => {
   try {
     const user = await getCurrentUser();
@@ -78,6 +97,12 @@ export const updateTaskAPI = async (taskId, updates) => {
     }
     if (updates.completed !== undefined) {
       updateData.completed = updates.completed;
+    }
+    if (updates.favorite !== undefined) {
+      updateData.favorite = updates.favorite;
+    }
+    if (updates.priority !== undefined) {
+      updateData.priority = updates.priority;
     }
 
     const { error } = await supabase

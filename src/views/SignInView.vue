@@ -12,12 +12,19 @@ const tasksStore = useTasksStore()
 const user = ref('')
 const password = ref('')
 const emailError = ref(false)
+const loginError = ref('')
 
 const signIn = async () => {
+  loginError.value = ''
   if (!emailError.value) {
-    await userStore.signIn(user.value, password.value)
-    await tasksStore.fetchTasks()
-    router.push({ name: 'home' })
+    try {
+      await userStore.signIn(user.value, password.value)
+      await tasksStore.fetchTasks()
+      router.push({ name: 'home' })
+    } catch (error) {
+      loginError.value = error.message || 'Error al iniciar sesión. Verifica tus credenciales.'
+      console.error('Error al iniciar sesión:', error)
+    }
   }
 }
 
@@ -42,6 +49,7 @@ const validateEmail = () => {
         <input type="password" id="password" class="form-input" v-model="password" required
           autocomplete="current-password" />
       </div>
+      <span v-if="loginError" class="error-message">{{ loginError }}</span>
       <button type="submit" class="signin-btn">Log In</button>
     </form>
   </main>

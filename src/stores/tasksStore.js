@@ -44,12 +44,14 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
-  // 🔁 ACTUALIZAR TAREA (title / completed)
+  // 🔁 ACTUALIZAR TAREA (title / completed / favorite / priority)
   async function updateTask(taskId, updatedTask) {
     try {
       await updateTaskAPI(taskId, {
         title: updatedTask.title,
-        completed: updatedTask.completed
+        completed: updatedTask.completed,
+        favorite: updatedTask.favorite,
+        priority: updatedTask.priority
       })
       await fetchTasks()
     } catch (error) {
@@ -58,13 +60,39 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
-  // ❌ FAVORITOS ELIMINADOS (no existen en Supabase nuevo)
+  // ⭐ TOGGLE FAVORITO
+  async function toggleFavorite(taskId, currentFavorite) {
+    try {
+      await updateTaskAPI(taskId, {
+        favorite: !currentFavorite
+      })
+      await fetchTasks()
+    } catch (error) {
+      console.error('Error toggling favorite:', error)
+      throw error
+    }
+  }
+
+  // 🎯 CAMBIAR PRIORIDAD
+  async function changePriority(taskId, priority) {
+    try {
+      await updateTaskAPI(taskId, {
+        priority: priority
+      })
+      await fetchTasks()
+    } catch (error) {
+      console.error('Error changing priority:', error)
+      throw error
+    }
+  }
 
   return {
     tasks,
     fetchTasks,
     createNewTask,
     deleteTask,
-    updateTask
+    updateTask,
+    toggleFavorite,
+    changePriority
   }
 })
