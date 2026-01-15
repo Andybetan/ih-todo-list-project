@@ -4,10 +4,80 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
+    <title>To-Do List</title>
+    <style>
+      #loading-error {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f5f5f5;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+      }
+      #loading-error.show {
+        display: flex;
+      }
+      .error-box {
+        text-align: center;
+        padding: 30px;
+        border: 2px solid #ff4444;
+        border-radius: 12px;
+        max-width: 600px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+      .error-box h1 {
+        color: #ff4444;
+        margin-bottom: 15px;
+      }
+      .error-box p {
+        color: #666;
+        line-height: 1.6;
+      }
+      .error-box code {
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
+    <div id="loading-error">
+      <div class="error-box">
+        <h1>⚠️ Error al cargar la aplicación</h1>
+        <p>Por favor, abre la consola del navegador (F12) para ver el error detallado.</p>
+        <p style="margin-top: 20px; font-size: 14px; color: #999;">
+          Verifica que las variables de entorno estén configuradas en Vercel:<br>
+          <code>VITE_SUPABASE_URL</code> y <code>VITE_SUPABASE_ANON_KEY</code>
+        </p>
+      </div>
+    </div>
+    <script>
+      // Mostrar error si la app no carga en 5 segundos
+      setTimeout(() => {
+        if (!document.querySelector('#app').hasChildNodes()) {
+          document.getElementById('loading-error').classList.add('show');
+        }
+      }, 5000);
+      
+      // Capturar errores de módulos
+      window.addEventListener('error', (event) => {
+        console.error('Error capturado:', event.error);
+        document.getElementById('loading-error').classList.add('show');
+        if (event.error && event.error.message) {
+          const errorBox = document.querySelector('.error-box p');
+          if (errorBox) {
+            errorBox.textContent = event.error.message;
+          }
+        }
+      });
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
