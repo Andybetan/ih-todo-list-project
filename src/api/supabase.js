@@ -10,16 +10,22 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Por favor, configura estas variables en Vercel:')
   console.error('- VITE_SUPABASE_URL')
   console.error('- VITE_SUPABASE_ANON_KEY')
+} else {
+  console.log('✅ Variables de entorno cargadas correctamente')
+  console.log('URL:', supabaseUrl.substring(0, 30) + '...')
+  console.log('Key:', supabaseAnonKey.substring(0, 20) + '...')
 }
 
-// Crear cliente de Supabase (aunque las variables estén vacías para evitar errores)
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-key',
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
+// Crear cliente de Supabase
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+  global: {
+    headers: {
+      'x-client-info': 'supabase-js-v2',
     },
-  }
-)
+  },
+})
