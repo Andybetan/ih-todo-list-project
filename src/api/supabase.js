@@ -16,6 +16,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.log('Key:', supabaseAnonKey.substring(0, 20) + '...')
 }
 
+// Validar que las variables no estén vacías antes de crear el cliente
+if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === '' || supabaseAnonKey === '') {
+  throw new Error(
+    'Configuración de Supabase incompleta. Por favor, verifica las variables de entorno en Vercel:\n' +
+    '- VITE_SUPABASE_URL\n' +
+    '- VITE_SUPABASE_ANON_KEY'
+  )
+}
+
 // Crear cliente de Supabase
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
