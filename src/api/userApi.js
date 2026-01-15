@@ -12,7 +12,7 @@ export const createNewUser = async (email, password) => {
     throw new Error(error.message);
   }
 
-  return data;
+  return data?.user || null;
 };
 
 export const logIn = async (email, password) => {

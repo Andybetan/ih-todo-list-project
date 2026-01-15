@@ -20,7 +20,8 @@ export const useUserStore = defineStore("user", () => {
     try {
       user.value = await createNewUser(email, password);
     } catch (error) {
-      console.error(error);
+      console.error('Error al registrarse:', error);
+      throw error;
     }
   }
 
@@ -28,7 +29,8 @@ export const useUserStore = defineStore("user", () => {
     try {
       user.value = await logIn(email, password);
     } catch (error) {
-      console.error(error);
+      console.error('Error al iniciar sesión:', error);
+      throw error;
     }
   }
 
