@@ -114,10 +114,44 @@ Eliminé `netlify.toml` del repositorio. El proyecto usa Vercel exclusivamente y
 
 ---
 
+---
+
+### Mejora 1.6 — Proyecto Supabase pausado permanentemente: demo rota en producción
+
+**Problema detectado:**
+La demo en `ih-todo-list-project.vercel.app` no funcionaba en producción. Al investigar, descubrí que las variables de entorno de Supabase estaban correctamente configuradas en Vercel desde el inicio — ese no era el problema real. El problema era que el proyecto de Supabase asociado (`ulpotzijnprfyjaaadve`) había superado los 90 días de inactividad en el tier gratuito y había sido pausado permanentemente por la plataforma.
+
+**Por qué era un problema:**
+Supabase pausa los proyectos gratuitos tras 90 días sin actividad, y a partir de cierto punto ya no permite restaurarlos desde el dashboard. El mensaje que recibí fue explícito: *"Project can no longer be restored through the dashboard"*. Aunque los datos seguían intactos y descargables como backup, el backend estaba efectivamente muerto. Cualquier llamada de autenticación o consulta a la base de datos fallaba silenciosamente.
+
+**Lo que NO era el problema:**
+Es importante documentar esto porque el diagnóstico inicial apuntaba a las variables de entorno mal configuradas en Vercel (un error clásico documentado en la Mejora 1.3). Sin embargo, al inspeccionar el panel de Vercel, las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` ya estaban correctamente definidas. La causa raíz era más profunda: la infraestructura de backend había caducado.
+
+**Solución aplicada:**
+Creé un nuevo proyecto de Supabase desde cero. Reconstruí el schema completo manualmente mediante una migración SQL que incluye:
+- `CREATE TABLE todos` con todos los campos: `id`, `user_id`, `title`, `completed`, `favorite`, `priority`, `created_at`
+- Índices de rendimiento sobre `user_id`, `favorite` y `priority`
+- Row Level Security activado explícitamente con `ALTER TABLE todos ENABLE ROW LEVEL SECURITY`
+- Cuatro políticas RLS para garantizar que cada usuario solo accede a sus propios datos (SELECT, INSERT, UPDATE, DELETE)
+
+Actualicé las variables de entorno en Vercel con las nuevas credenciales (`VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`) y realicé un redeploy. La demo quedó operativa y conectada al nuevo backend.
+
+**Qué demuestra:**
+Capacidad para diagnosticar problemas de infraestructura en producción más allá de los síntomas superficiales, entender el ciclo de vida de los proyectos en plataformas cloud gratuitas, y reconstruir un backend desde cero con las mismas especificaciones técnicas sin pérdida de funcionalidad.
+
+**Cómo explicarlo en entrevista:**
+> "La demo en producción no funcionaba, pero el problema no era el que parecía a primera vista. Las variables de entorno en Vercel estaban bien configuradas desde el principio. Al investigar más, detecté que el proyecto de Supabase había sido pausado permanentemente por el tier gratuito tras más de 90 días sin actividad. Analicé el schema existente, reconstruí la base de datos en un nuevo proyecto de Supabase con todos los índices, columnas y políticas de Row Level Security originales, actualicé las credenciales en Vercel y la demo volvió a funcionar."
+
+**Frase para portfolio/CV:**
+> "Diagnostiqué y resolví la caída de la demo en producción identificando la caducidad del backend como causa raíz, reconstruyendo el schema de Supabase y actualizando la infraestructura de despliegue en Vercel."
+
+---
+
 ## Commit de esta fase
 
 ```
-chore: clean repo — add .gitignore, remove node_modules and DS_Store
+chore: clean repo — add .gitignore, remove node_modules, DS_Store and netlify config
+fix: rebuild Supabase backend and restore Vercel demo after project expiry
 ```
 
 ---
