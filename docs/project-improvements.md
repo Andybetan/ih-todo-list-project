@@ -156,4 +156,50 @@ fix: rebuild Supabase backend and restore Vercel demo after project expiry
 
 ---
 
-*Próxima fase: Fase 2 — Separar HomeView.vue en componentes y limpiar arquitectura.*
+## Fase 2 — Componentización y separación de responsabilidades
+
+### Mejora 2.1 — HomeView.vue monolítico: toda la app en un único archivo
+
+**Problema detectado:**
+`HomeView.vue` concentraba demasiadas responsabilidades en un único archivo de más de 750 líneas: el título de la aplicación, el formulario de creación de tareas, la lista completa, el renderizado de cada tarea individual con todas sus acciones, el estado vacío (ausente), la lógica de logout y el estado local de edición y menús de prioridad. Cualquier cambio en una funcionalidad requería navegar por todo el archivo y afectaba potencialmente a partes no relacionadas.
+
+**Por qué era un problema:**
+Una vista monolítica de esta escala es difícil de leer, difícil de mantener y imposible de reutilizar. El estado de la edición en línea y el menú de prioridad estaban gestionados a nivel de vista con objetos indexados por ID de tarea (`showPriorityMenu[task.id]`), lo que añadía complejidad innecesaria a un nivel incorrecto. Además, los event listeners del documento (para cerrar menús al hacer clic fuera) se registraban sin limpiarse nunca, creando memory leaks potenciales.
+
+**Solución aplicada:**
+Separé `HomeView.vue` en cinco componentes con responsabilidad única:
+
+- `AppHeader.vue` — título de la aplicación (presentacional, sin estado)
+- `TaskForm.vue` — input y botón de creación, con su propia lógica de `addTask`
+- `TaskList.vue` — contador de tareas + lista, decide entre `TaskItem` y `TaskEmpty`
+- `TaskItem.vue` — tarjeta individual con toda su lógica: edición en línea, toggle completado, favorito, prioridad, eliminación
+- `TaskEmpty.vue` — estado vacío cuando no hay tareas (funcionalidad nueva añadida)
+
+`HomeView.vue` quedó reducido a ~50 líneas: solo importa los componentes, carga las tareas en `onMounted` y gestiona el logout.
+
+**Decisiones técnicas relevantes:**
+- El estado de edición (`isEditing`, `editTitle`) y el menú de prioridad (`showPriorityMenu`) se movieron dentro de `TaskItem` como estado local reactivo, eliminando la necesidad de objetos indexados por ID en la vista padre.
+- Los event listeners de documento para cerrar menús se registran en `onMounted` y se limpian en `onUnmounted` de cada `TaskItem`, corrigiendo el memory leak del código original.
+- Los componentes acceden directamente a los stores de Pinia en lugar de recibir handlers como props, siguiendo el patrón ya establecido en el proyecto.
+- La prop `task` en `TaskItem` es solo lectura: el checkbox usa `:checked` + `@change` en lugar de `v-model` para evitar mutación de props, y la edición usa un `ref` local (`editTitle`).
+
+**Qué demuestra:**
+Capacidad para aplicar separación de responsabilidades, componentización en Vue, comunicación entre componentes mediante props, y mejora de mantenibilidad sin romper funcionalidad existente.
+
+**Cómo explicarlo en entrevista:**
+> "Refactoricé una vista monolítica de más de 750 líneas en una arquitectura basada en componentes. Mantuve la misma funcionalidad exacta, pero separé responsabilidades para que el código fuera más escalable, legible y fácil de mantener. Aproveché el refactor para corregir un memory leak en los event listeners del menú de prioridad y para mover el estado local de edición al nivel correcto —dentro del componente que lo necesita— en lugar de gestionarlo en la vista padre."
+
+**Frase para portfolio/CV:**
+> "Refactoricé la vista principal de una app Vue/Supabase en componentes reutilizables, mejorando la mantenibilidad y la estructura del proyecto sin alterar la funcionalidad existente."
+
+---
+
+## Commit de esta fase
+
+```
+refactor: split HomeView into AppHeader, TaskForm, TaskList, TaskItem, TaskEmpty
+```
+
+---
+
+*Próxima fase: Fase 3 — Mejoras de UX: loading states, toasts, empty states y responsive.*
