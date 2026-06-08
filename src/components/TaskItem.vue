@@ -252,13 +252,9 @@ onUnmounted(() => {
 }
 
 .task-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
-  border-color: #d0d0d0;
-}
-
-.task-card:hover::before {
-  width: 4px;
+  transform: translateY(-1px);
+  border-color: #d6e3dc;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .task-card.favorite {
