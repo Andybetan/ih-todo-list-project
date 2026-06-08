@@ -1,6 +1,8 @@
 <script>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import ToastNotification from '@/components/ToastNotification.vue';
+import ConfirmModal from '@/components/ConfirmModal.vue';
 
 export default {
   setup() {
@@ -23,7 +25,8 @@ export default {
       shouldShowAboutLink,
       shouldShowSignupLink
     };
-  }
+  },
+  components: { ToastNotification, ConfirmModal }
 };
 </script>
 <template>
@@ -38,6 +41,8 @@ export default {
 	</header>
 	
 	<RouterView />
+	<ToastNotification />
+	<ConfirmModal />
   </template>
 
 <style scoped>

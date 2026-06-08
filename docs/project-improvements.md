@@ -203,3 +203,65 @@ refactor: split HomeView into AppHeader, TaskForm, TaskList, TaskItem, TaskEmpty
 ---
 
 *Próxima fase: Fase 3 — Mejoras de UX: loading states, toasts, empty states y responsive.*
+
+---
+
+## Fase 3 — UX real: loading states, toasts y confirmación modal
+
+### Mejora 3.1 — `alert()` y `confirm()` nativos del navegador
+
+**Problema detectado:**
+Todos los errores y confirmaciones de la app usaban `alert()` y `confirm()` nativos del navegador. Estos diálogos son bloqueantes, no se pueden estilizar, rompen la sensación de app web moderna e interrumpen el flujo del usuario con ventanas emergentes del sistema operativo.
+
+**Solución aplicada:**
+Creé dos composables singleton que encapsulan el estado global de notificaciones y confirmaciones:
+
+- `src/composables/useToast.js` — gestiona una cola de toasts reactivos compartidos entre todos los componentes. Los toasts desaparecen automáticamente (3s éxito, 4s error).
+- `src/composables/useConfirm.js` — expone un método `confirm(mensaje)` que devuelve una Promise. Los componentes hacen `await confirm(...)` exactamente igual que con el `confirm()` nativo, pero la resolución la controla el usuario a través de un modal visual.
+
+Ambos se montan una sola vez en `App.vue` via `<Teleport to="body">`, lo que garantiza que el z-index nunca quede atrapado dentro de contenedores con `overflow: hidden`.
+
+**Componentes creados:**
+- `ToastNotification.vue` — renderiza la cola de toasts en la esquina inferior derecha con animación de entrada/salida
+- `ConfirmModal.vue` — overlay oscuro con tarjeta centrada, botones "Cancelar" y "Eliminar", cierra al hacer clic fuera
+
+**Qué demuestra:**
+Conocimiento del patrón de composables singleton en Vue 3, uso de `<Teleport>` para componentes globales, y diseño de APIs asíncronas con Promises para UX no bloqueante.
+
+---
+
+### Mejora 3.2 — Sin loading state al cargar las tareas
+
+**Problema detectado:**
+Al abrir la app, la pantalla aparecía vacía durante el tiempo que tardaba la petición a Supabase. No había ningún indicador de que algo estaba cargando, lo que podía parecer un error.
+
+**Solución aplicada:**
+Añadí un `tasksLoading` ref en `HomeView.vue` que se pone a `false` cuando `fetchTasks` completa (con `try/finally`). `TaskList` recibe este estado como prop y muestra un spinner animado con CSS mientras es `true`. Cuando termina, muestra la lista o el estado vacío (`TaskEmpty`).
+
+---
+
+### Mejora 3.3 — Botones activos durante operaciones asíncronas
+
+**Problema detectado:**
+Al crear, editar, eliminar o cambiar prioridad/favorito de una tarea, el usuario podía hacer clic múltiples veces mientras la operación estaba en curso, generando peticiones duplicadas.
+
+**Solución aplicada:**
+Añadí `isSubmitting` en `TaskForm` y `isProcessing` en `TaskItem`. Durante cualquier operación async, los botones quedan desactivados (`disabled`) y el área de acciones recibe `opacity: 0.5; pointer-events: none`. El botón "Create" también muestra "Creando..." mientras espera.
+
+**Cómo explicarlo en entrevista:**
+> "Reemplacé todos los `alert()` y `confirm()` del navegador por un sistema propio de toasts y modales. Usé composables singleton en Vue 3 para compartir el estado entre componentes sin necesidad de un store adicional, y `<Teleport>` para montar los componentes globales directamente en el `body` y evitar problemas de z-index. El modal de confirmación usa una Promise para mantener la misma interfaz asíncrona que el `confirm()` nativo, pero con control visual completo."
+
+**Frase para portfolio/CV:**
+> "Implementé un sistema de notificaciones toast y confirmación modal en Vue 3 usando composables singleton y Teleport, reemplazando los diálogos nativos del navegador por una UX moderna y cohesiva."
+
+---
+
+## Commit de esta fase
+
+```
+feat: add toast notifications, confirm modal and loading states (Phase 3 UX)
+```
+
+---
+
+*Próxima fase: Fase 4 — Features: filtros, búsqueda, contador mejorado, ordenación.*

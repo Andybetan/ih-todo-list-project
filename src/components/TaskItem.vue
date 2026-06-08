@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
+import { useToast } from '@/composables/useToast'
+import { useConfirm } from '@/composables/useConfirm'
 
 const props = defineProps({
   task: {
@@ -10,9 +12,13 @@ const props = defineProps({
 })
 
 const tasksStore = useTasksStore()
+const { success, error } = useToast()
+const { confirm } = useConfirm()
+
 const isEditing = ref(false)
 const editTitle = ref('')
 const showPriorityMenu = ref(false)
+const isProcessing = ref(false)
 
 const startEdit = () => {
   editTitle.value = props.task.title
@@ -20,48 +26,76 @@ const startEdit = () => {
 }
 
 const saveEdit = async () => {
-  await tasksStore.updateTask(props.task.id, {
-    title: editTitle.value,
-    completed: props.task.completed,
-    favorite: props.task.favorite || false,
-    priority: props.task.priority || 'normal'
-  })
-  isEditing.value = false
+  if (!editTitle.value.trim()) return
+  isProcessing.value = true
+  try {
+    await tasksStore.updateTask(props.task.id, {
+      title: editTitle.value.trim(),
+      completed: props.task.completed,
+      favorite: props.task.favorite || false,
+      priority: props.task.priority || 'normal'
+    })
+    success('Tarea actualizada')
+  } catch (err) {
+    error('Error al guardar: ' + (err.message || 'Inténtalo de nuevo'))
+  } finally {
+    isEditing.value = false
+    isProcessing.value = false
+  }
 }
 
 const toggleComplete = async () => {
-  await tasksStore.updateTask(props.task.id, {
-    title: props.task.title,
-    completed: !props.task.completed,
-    favorite: props.task.favorite || false,
-    priority: props.task.priority || 'normal'
-  })
+  isProcessing.value = true
+  try {
+    await tasksStore.updateTask(props.task.id, {
+      title: props.task.title,
+      completed: !props.task.completed,
+      favorite: props.task.favorite || false,
+      priority: props.task.priority || 'normal'
+    })
+  } catch (err) {
+    error('Error al actualizar la tarea')
+  } finally {
+    isProcessing.value = false
+  }
 }
 
 const deleteTask = async () => {
-  if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+  const ok = await confirm('¿Eliminar esta tarea? Esta acción no se puede deshacer.')
+  if (!ok) return
+  isProcessing.value = true
+  try {
     await tasksStore.deleteTask(props.task.id)
+    success('Tarea eliminada')
+  } catch (err) {
+    error('Error al eliminar la tarea')
+  } finally {
+    isProcessing.value = false
   }
 }
 
 const toggleFavorite = async () => {
+  isProcessing.value = true
   try {
     const current = props.task.favorite === true || props.task.favorite === 1
     await tasksStore.toggleFavorite(props.task.id, current)
-  } catch (error) {
-    console.error('Error toggling favorite:', error)
-    alert('Error al cambiar favorito: ' + (error.message || 'Verifica que la columna favorite exista en la base de datos'))
+  } catch (err) {
+    error('Error al cambiar favorito: ' + (err.message || 'Inténtalo de nuevo'))
+  } finally {
+    isProcessing.value = false
   }
 }
 
 const changePriority = async (priority) => {
+  isProcessing.value = true
   try {
     await tasksStore.changePriority(props.task.id, priority)
     showPriorityMenu.value = false
-  } catch (error) {
-    console.error('Error changing priority:', error)
-    alert('Error al cambiar prioridad: ' + (error.message || 'Verifica que la columna priority exista en la base de datos'))
+  } catch (err) {
+    error('Error al cambiar prioridad: ' + (err.message || 'Inténtalo de nuevo'))
     showPriorityMenu.value = false
+  } finally {
+    isProcessing.value = false
   }
 }
 
@@ -99,6 +133,7 @@ onUnmounted(() => {
           :checked="task.completed"
           @change="toggleComplete"
           class="task-checkbox"
+          :disabled="isProcessing"
         />
       </div>
 
@@ -124,7 +159,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="task-actions">
+    <div class="task-actions" :class="{ 'processing': isProcessing }">
       <div
         class="priority-badge"
         :class="`priority-${task.priority || 'normal'}`"
@@ -139,6 +174,7 @@ onUnmounted(() => {
         class="action-btn favorite-btn"
         :class="{ 'active': isFavorite() }"
         :title="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+        :disabled="isProcessing"
       >
         <span class="star-icon">{{ isFavorite() ? '★' : '☆' }}</span>
       </button>
@@ -170,11 +206,11 @@ onUnmounted(() => {
         </transition>
       </div>
 
-      <button @click.stop="startEdit" class="action-btn edit-btn" title="Edit task">
+      <button @click.stop="startEdit" class="action-btn edit-btn" title="Edit task" :disabled="isProcessing">
         ✏️
       </button>
 
-      <button @click.stop="deleteTask" class="action-btn delete-btn" title="Delete task">
+      <button @click.stop="deleteTask" class="action-btn delete-btn" title="Delete task" :disabled="isProcessing">
         🗑️
       </button>
     </div>
@@ -488,6 +524,11 @@ onUnmounted(() => {
 .delete-btn:hover {
   background-color: #ffe6e6;
   color: #ff4444;
+}
+
+.task-actions.processing {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .edit-btn:hover {

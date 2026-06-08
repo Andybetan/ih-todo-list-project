@@ -1,7 +1,7 @@
 <script setup>
 import { useTasksStore } from '@/stores/tasksStore'
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 import AppHeader from '@/components/AppHeader.vue'
@@ -12,6 +12,7 @@ const router = useRouter()
 const tasksStore = useTasksStore()
 const { tasks } = storeToRefs(tasksStore)
 const userStore = useUserStore()
+const tasksLoading = ref(true)
 
 const signOut = async () => {
   await userStore.logout()
@@ -19,7 +20,11 @@ const signOut = async () => {
 }
 
 onMounted(async () => {
-  await tasksStore.fetchTasks()
+  try {
+    await tasksStore.fetchTasks()
+  } finally {
+    tasksLoading.value = false
+  }
 })
 </script>
 
@@ -27,7 +32,7 @@ onMounted(async () => {
   <main class="todo-list-container">
     <AppHeader />
     <TaskForm />
-    <TaskList :tasks="tasks" />
+    <TaskList :tasks="tasks" :loading="tasksLoading" />
 
     <button class="signout-btn" @click="signOut">Sign Out</button>
 

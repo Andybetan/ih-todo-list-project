@@ -1,12 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
+import { useToast } from '@/composables/useToast'
 
 const tasksStore = useTasksStore()
+const { success, error } = useToast()
 const taskTitle = ref('')
+const isSubmitting = ref(false)
 
 const addTask = async () => {
   if (!taskTitle.value.trim()) return
+  isSubmitting.value = true
   try {
     await tasksStore.createNewTask({
       title: taskTitle.value.trim(),
@@ -14,10 +18,12 @@ const addTask = async () => {
       favorite: false,
       priority: 'normal'
     })
+    success('Tarea creada')
     taskTitle.value = ''
-  } catch (error) {
-    console.error('Error creating task:', error)
-    alert('Error al crear la tarea: ' + (error.message || 'Verifica que las columnas favorite y priority existan en la base de datos'))
+  } catch (err) {
+    error('Error al crear la tarea: ' + (err.message || 'Inténtalo de nuevo'))
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>
@@ -31,8 +37,8 @@ const addTask = async () => {
       class="task-input"
       @keydown.enter="addTask"
     />
-    <button class="create-task-btn" @click="addTask">
-      Create
+    <button class="create-task-btn" @click="addTask" :disabled="isSubmitting">
+      {{ isSubmitting ? 'Creando...' : 'Create' }}
     </button>
   </div>
 </template>
@@ -76,5 +82,10 @@ const addTask = async () => {
 
 .create-task-btn:hover {
   background-color: #35a372;
+}
+
+.create-task-btn:disabled {
+  background-color: #a8d5c2;
+  cursor: not-allowed;
 }
 </style>
