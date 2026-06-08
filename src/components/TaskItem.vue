@@ -239,33 +239,19 @@ onUnmounted(() => {
 }
 
 .task-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  background: linear-gradient(135deg, #42b883 0%, #35a372 100%);
-  transition: width 0.3s ease;
-  z-index: 0;
-  border-radius: 16px 0 0 16px;
+  display: none;
 }
 
 .task-card:hover {
   transform: translateY(-1px);
-  border-color: #d6e3dc;
+  border-color: #e2e2e2;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .task-card.favorite {
-  border-left: 4px solid #ffd700;
-  background: linear-gradient(to right, #fffbf0 0%, white 15%);
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.15);
-}
-
-.task-card.favorite::before {
-  width: 4px;
-  background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+  background: #fffaf0;
+  border-color: #f1dfad;
+  box-shadow: 0 2px 8px rgba(241, 223, 173, 0.3);
 }
 
 .task-card.completed {
