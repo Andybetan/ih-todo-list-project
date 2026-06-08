@@ -33,7 +33,7 @@
 	  </section>
 	</main>
 	<footer class="page-footer">
-	  <p>&copy; 2024 Iron Hack Final Project. All rights reserved.</p>
+	  <p>&copy; 2026 Andrés Beltrán Betancourt · Built with Vue, Supabase &amp; Vercel</p>
 	</footer>
   </template>
   
