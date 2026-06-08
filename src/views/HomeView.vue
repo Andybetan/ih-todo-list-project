@@ -1,11 +1,12 @@
 <script setup>
-import { useTasksStore } from '@/stores/tasksStore'
-import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useTasksStore } from '@/stores/tasksStore'
 import { useUserStore } from '@/stores/userStore'
 import AppHeader from '@/components/AppHeader.vue'
 import TaskForm from '@/components/TaskForm.vue'
+import TaskFilters from '@/components/TaskFilters.vue'
 import TaskList from '@/components/TaskList.vue'
 
 const router = useRouter()
@@ -13,6 +14,38 @@ const tasksStore = useTasksStore()
 const { tasks } = storeToRefs(tasksStore)
 const userStore = useUserStore()
 const tasksLoading = ref(true)
+
+const activeFilter = ref('all')
+const searchQuery = ref('')
+
+const filteredTasks = computed(() => {
+  let result = tasks.value
+
+  if (activeFilter.value === 'pending') {
+    result = result.filter(t => !t.completed)
+  } else if (activeFilter.value === 'completed') {
+    result = result.filter(t => t.completed)
+  }
+
+  if (searchQuery.value.trim()) {
+    const q = searchQuery.value.toLowerCase().trim()
+    result = result.filter(t => t.title.toLowerCase().includes(q))
+  }
+
+  return result
+})
+
+const totalCount     = computed(() => tasks.value.length)
+const pendingCount   = computed(() => tasks.value.filter(t => !t.completed).length)
+const completedCount = computed(() => tasks.value.filter(t => t.completed).length)
+
+const emptyContext = computed(() => {
+  if (tasks.value.length === 0) return 'no-tasks'
+  if (searchQuery.value.trim() && filteredTasks.value.length === 0) return 'no-results'
+  if (activeFilter.value === 'pending'   && filteredTasks.value.length === 0) return 'no-pending'
+  if (activeFilter.value === 'completed' && filteredTasks.value.length === 0) return 'no-completed'
+  return 'no-tasks'
+})
 
 const signOut = async () => {
   await userStore.logout()
@@ -32,7 +65,20 @@ onMounted(async () => {
   <main class="todo-list-container">
     <AppHeader />
     <TaskForm />
-    <TaskList :tasks="tasks" :loading="tasksLoading" />
+    <TaskFilters
+      :active-filter="activeFilter"
+      :search-query="searchQuery"
+      @update:active-filter="activeFilter = $event"
+      @update:search-query="searchQuery = $event"
+    />
+    <TaskList
+      :tasks="filteredTasks"
+      :loading="tasksLoading"
+      :total-count="totalCount"
+      :pending-count="pendingCount"
+      :completed-count="completedCount"
+      :empty-context="emptyContext"
+    />
 
     <button class="signout-btn" @click="signOut">Sign Out</button>
 

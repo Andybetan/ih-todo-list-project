@@ -265,3 +265,91 @@ feat: add toast notifications, confirm modal and loading states (Phase 3 UX)
 ---
 
 *Próxima fase: Fase 4 — Features: filtros, búsqueda, contador mejorado, ordenación.*
+
+---
+
+## Fase 4 — Filtros, buscador, contadores y estado vacío contextual
+
+### Mejora 4.1 — Sin filtros: el usuario no podía ver sólo las tareas pendientes o completadas
+
+**Problema detectado:**
+La app mostraba todas las tareas juntas, sin posibilidad de filtrar por estado. Un usuario con muchas tareas no tenía forma de enfocarse solo en lo que le quedaba pendiente o revisar lo que ya había terminado.
+
+**Solución aplicada:**
+Se creó el componente `TaskFilters.vue` con tres pestañas de filtro: **Todas**, **Pendientes** y **Completadas**. El estado del filtro activo (`activeFilter`) vive en `HomeView.vue` como un `ref`, y el resultado filtrado se calcula con un `computed` (`filteredTasks`). El componente `TaskFilters` es puramente presentacional: recibe el filtro activo como prop y emite el nuevo valor cuando el usuario hace clic, siguiendo el patrón de Vue 3 de flujo de datos unidireccional.
+
+**Componentes modificados o creados:**
+- `TaskFilters.vue` (nuevo) — tabs de filtro + buscador
+- `HomeView.vue` — añade `activeFilter`, `searchQuery`, `filteredTasks`, contadores y `emptyContext` como computeds
+
+---
+
+### Mejora 4.2 — Sin buscador: imposible encontrar una tarea específica
+
+**Problema detectado:**
+No había forma de buscar una tarea por nombre. Con una lista larga, el usuario tenía que hacer scroll y revisar visualmente hasta encontrarla.
+
+**Solución aplicada:**
+Se añadió un input de búsqueda en `TaskFilters.vue`. La búsqueda se aplica sobre el conjunto ya filtrado por estado (primero filtra por Todas/Pendientes/Completadas, luego filtra por texto). El buscador usa `toLowerCase().includes()` para búsqueda insensible a mayúsculas. Incluye un botón `×` para limpiar la búsqueda rápidamente que aparece sólo cuando hay texto escrito.
+
+---
+
+### Mejora 4.3 — Contadores genéricos: solo mostraban total y completadas
+
+**Problema detectado:**
+`TaskList.vue` calculaba internamente `tasks.length` y `tasks.filter(t => t.completed).length`. Esto era correcto cuando recibía todas las tareas, pero al introducir filtros, los contadores habrían mostrado los totales del subconjunto filtrado, no del total real.
+
+**Solución aplicada:**
+Los tres contadores (Total, Pendientes, Completadas) se calculan ahora en `HomeView.vue` sobre el array completo de tareas (`tasks.value`), antes de aplicar cualquier filtro. Se pasan a `TaskList` como props (`totalCount`, `pendingCount`, `completedCount`). Así los contadores siempre reflejan el estado real del usuario, independientemente del filtro o búsqueda activos.
+
+**Decisión técnica relevante:**
+Calcular los contadores en `HomeView` (el orquestador) en lugar de en `TaskList` separa claramente las responsabilidades: `TaskList` renderiza lo que le llega, `HomeView` decide qué datos y con qué resumen.
+
+---
+
+### Mejora 4.4 — TaskEmpty genérico: el mismo mensaje para todos los estados vacíos
+
+**Problema detectado:**
+`TaskEmpty.vue` mostraba siempre el mismo texto ("No tasks yet. Add your first task above!") sin importar por qué la lista estaba vacía. Si el usuario filtraba por "Completadas" y no tenía ninguna, recibía el mismo mensaje que si no tuviera tareas en absoluto, lo que era confuso y poco informativo.
+
+**Solución aplicada:**
+Se rediseñó `TaskEmpty.vue` para recibir una prop `context` con cuatro valores posibles:
+- `no-tasks` — no hay tareas en absoluto
+- `no-pending` — hay tareas pero ninguna pendiente
+- `no-completed` — hay tareas pero ninguna completada
+- `no-results` — la búsqueda no devuelve resultados
+
+Cada contexto muestra un **icono SVG inline diferente** y un mensaje propio (título + subtítulo). Los SVGs son propios, sin dependencias externas: un portapapeles, un check en círculo, un reloj de arena y una lupa con X. La lógica del contexto activo (`emptyContext`) es un `computed` en `HomeView` que evalúa la combinación de filtro activo + búsqueda + tareas disponibles.
+
+---
+
+### Mejora 4.5 — Orden automático preservado tras el filtrado
+
+**Problema detectado:**
+El orden de las tareas (favoritos primero, luego por prioridad alta/normal/baja, luego por fecha) se calculaba en `tasksApi.js` sobre el array completo. Al introducir filtros de cliente, había riesgo de perder ese orden.
+
+**Solución aplicada:**
+El `computed` `filteredTasks` aplica `Array.filter()` sobre el array ya ordenado que devuelve el store. `filter()` preserva el orden original del array fuente, por lo que el orden favorito-prioridad-fecha se mantiene intacto en cualquier combinación de filtro y búsqueda, sin necesidad de reordenar.
+
+---
+
+**Qué demuestra técnicamente:**
+- Uso de `computed` en Vue 3 para derivar datos sin duplicar estado
+- Flujo de datos unidireccional: estado en el orquestador, componentes presentacionales sin efectos secundarios
+- Separación clara entre datos de origen (store) y datos de vista (filtrados)
+- Comunicación padre→hijo con props y hijo→padre con `emit`
+- SVGs inline accesibles sin dependencias externas
+
+**Cómo explicarlo en entrevista:**
+> "Añadí filtros y búsqueda sin tocar el store ni la API. Todo el filtrado ocurre en un `computed` en el componente orquestador, que recibe las tareas del store ya ordenadas y aplica el filtro de estado y la búsqueda de texto encima. Los contadores se calculan sobre el array original para que siempre reflejen el total real, no el subconjunto filtrado. Separé el componente de filtros como un componente presentacional que solo emite eventos, siguiendo el patrón de Vue 3 de flujo unidireccional."
+
+**Frase para CV/portfolio:**
+> "Implementé filtros por estado, buscador de texto y contadores reactivos en Vue 3 usando `computed` y flujo de datos unidireccional, con un estado vacío contextual con iconos SVG que informa al usuario exactamente por qué la lista está vacía."
+
+---
+
+## Commit de esta fase
+
+```
+feat: add filters, search, counters and contextual empty state (Phase 4)
+```
