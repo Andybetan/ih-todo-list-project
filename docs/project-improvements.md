@@ -352,3 +352,27 @@ El `computed` `filteredTasks` aplica `Array.filter()` sobre el array ya ordenado
 ```
 feat: add filters, search, counters and contextual empty state (Phase 4)
 ```
+
+---
+
+## UI Polish — Microinteracciones de cards
+
+### Mejora P.1 — Franjas laterales de color en hover y favorito
+
+**Problema detectado:**
+El estado hover y favorito usaba franjas laterales de color mediante `::before` y `border-left`, lo que generaba una sensación visual demasiado marcada y poco coherente con una UI limpia.
+
+**Solución aplicada:**
+Se eliminaron las franjas laterales y se sustituyeron por estados visuales más sutiles: hover neutro con sombra suave (`box-shadow: 0 8px 24px rgba(0,0,0,0.06)`), favorito con fondo crema (`#fffaf0`), borde completo dorado suave (`#f1dfad`) y estrella activa como señal principal. El pseudo-elemento `::before` se desactivó con `display: none`.
+
+**Qué demuestra:**
+Criterio UI, atención al detalle y capacidad para mejorar microinteracciones sin romper la funcionalidad.
+
+**Frase para portfolio/CV:**
+> "Pulí los estados visuales de las cards eliminando indicadores laterales excesivos y sustituyéndolos por hover, bordes y fondos sutiles más coherentes con una interfaz premium."
+
+**Commits:**
+```
+fix: refine task card hover state
+fix: refine favorite task visual state
+```
