@@ -1,118 +1,118 @@
 # Task Manager — Vue 3 + Supabase
 
-A full-stack task management web app built with Vue 3, Supabase and Vercel. Originally submitted as a bootcamp final project, it has since been refactored, documented and progressively improved to meet a more professional standard.
+Task Manager es una aplicación full-stack de gestión de tareas construida con Vue 3, Pinia y Supabase. Nació como proyecto final de Ironhack y posteriormente fue refactorizada para convertirla en una app más limpia, mantenible y preparada para portfolio, con arquitectura basada en componentes, autenticación con Supabase, Row Level Security, toasts, modal de confirmación, filtros, búsqueda en tiempo real, contadores y estados vacíos contextuales. Está desplegada en Vercel.
 
-**Live demo:** https://ih-todo-list-project.vercel.app  
-**Repository:** https://github.com/Andybetan/ih-todo-list-project
-
----
-
-## From bootcamp project to portfolio-ready app
-
-This project started as a final deliverable for the Ironhack Web Development bootcamp. After the initial submission, I continued working on it independently — rebuilding an expired Supabase backend, refactoring a monolithic view into reusable components, adding real UX patterns, and improving code quality throughout.
-
-The goal was not to rebuild it from scratch, but to take real working code and bring it progressively closer to a professional standard: better architecture, better user experience, and honest documentation of every decision made along the way.
+**Demo en producción:** https://ih-todo-list-project.vercel.app  
+**Repositorio:** https://github.com/Andybetan/ih-todo-list-project
 
 ---
 
-## Stack
+## De proyecto de bootcamp a app de portfolio
 
-| Technology | Role |
+Este proyecto nació como entrega final del bootcamp de Desarrollo Web de Ironhack. Tras la entrega, continué trabajando en él de forma independiente: reconstruí el backend de Supabase que había caducado, refactoricé la vista monolítica en componentes reutilizables, añadí patrones reales de UX y mejoré la calidad del código en general.
+
+El objetivo no era reescribirlo desde cero, sino tomar código real y funcional y acercarlo progresivamente a un estándar más profesional: mejor arquitectura, mejor experiencia de usuario y documentación honesta de cada decisión tomada en el camino.
+
+---
+
+## Stack técnico
+
+| Tecnología | Rol |
 |---|---|
-| Vue 3 (Composition API) | UI framework |
-| Vite | Build tool and dev server |
-| Pinia | State management |
-| Vue Router | Client-side routing |
-| Supabase | Auth (email/password) + PostgreSQL database |
-| Vercel | CI/CD and hosting |
+| Vue 3 (Composition API) | Framework de UI |
+| Vite | Build tool y servidor de desarrollo |
+| Pinia | Gestión de estado |
+| Vue Router | Navegación en cliente |
+| Supabase | Autenticación (email/contraseña) + base de datos PostgreSQL |
+| Vercel | CI/CD y hosting |
 
 ---
 
-## Features
+## Funcionalidades
 
-- **Authentication** — Sign up, log in and log out with Supabase Auth
-- **Per-user data** — Row Level Security ensures each user only sees their own tasks
-- **Task CRUD** — Create, read, update (inline on double-click) and delete tasks
-- **Favorites** — Pin tasks to the top; sorted automatically
-- **Priority levels** — High / Normal / Low with color-coded badges
-- **Automatic sorting** — Favorites first → priority → creation date
-- **Filters** — View All, Pending or Completed tasks
-- **Search** — Real-time text search within the active filter
-- **Counters** — Total, Pending and Completed counts, always reflecting the full list
-- **Contextual empty states** — Unique message and SVG icon per scenario (no tasks, no pending, no completed, no search results)
-- **Toast notifications** — Non-blocking success and error feedback for every action
-- **Confirm modal** — Custom modal replaces native `confirm()` for destructive actions
-- **Loading states** — Spinner on initial load; buttons disabled during async operations
+- **Autenticación** — Registro, inicio y cierre de sesión con Supabase Auth
+- **Datos por usuario** — Row Level Security garantiza que cada usuario solo ve sus propias tareas
+- **CRUD de tareas** — Crear, leer, actualizar (edición inline con doble clic) y eliminar
+- **Favoritos** — Fija tareas al principio de la lista; se ordenan automáticamente
+- **Niveles de prioridad** — Alta / Normal / Baja con badges con código de color
+- **Orden automático** — Favoritos primero → prioridad → fecha de creación
+- **Filtros** — Ver Todas, Pendientes o Completadas
+- **Búsqueda** — Búsqueda de texto en tiempo real dentro del filtro activo
+- **Contadores** — Total, Pendientes y Completadas, siempre calculados sobre la lista completa
+- **Estados vacíos contextuales** — Mensaje e icono SVG únicos según el motivo (sin tareas, sin pendientes, sin completadas, sin resultados)
+- **Toasts** — Notificaciones no bloqueantes de éxito y error para cada acción
+- **Modal de confirmación** — Modal personalizado que reemplaza el `confirm()` nativo para acciones destructivas
+- **Estados de carga** — Spinner al cargar; botones desactivados durante operaciones asíncronas
 
 ---
 
-## Architecture
+## Arquitectura
 
-Refactored from a single monolithic view (~750 lines) into a component-based architecture:
+Refactorizado desde una vista monolítica de ~750 líneas a una arquitectura basada en componentes:
 
 ```
 src/
 ├── views/
-│   └── HomeView.vue          # Orchestrator: manages state and computed data
+│   └── HomeView.vue          # Orquestador: gestiona el estado y los datos computados
 ├── components/
-│   ├── AppHeader.vue         # App title (presentational, no state)
-│   ├── TaskForm.vue          # New task input
-│   ├── TaskFilters.vue       # Filter tabs + search input
-│   ├── TaskList.vue          # List container + counters
-│   ├── TaskItem.vue          # Individual task card with all actions
-│   ├── TaskEmpty.vue         # Contextual empty state
-│   ├── ToastNotification.vue # Global toast system (via Teleport)
-│   └── ConfirmModal.vue      # Global confirm dialog (via Teleport)
+│   ├── AppHeader.vue         # Título de la app (presentacional, sin estado)
+│   ├── TaskForm.vue          # Input para crear tareas
+│   ├── TaskFilters.vue       # Pestañas de filtro + buscador
+│   ├── TaskList.vue          # Contenedor de la lista + contadores
+│   ├── TaskItem.vue          # Card individual con todas sus acciones
+│   ├── TaskEmpty.vue         # Estado vacío contextual
+│   ├── ToastNotification.vue # Sistema global de toasts (via Teleport)
+│   └── ConfirmModal.vue      # Modal de confirmación global (via Teleport)
 ├── composables/
-│   ├── useToast.js           # Singleton toast state shared app-wide
-│   └── useConfirm.js         # Promise-based confirm API
+│   ├── useToast.js           # Estado singleton de toasts compartido por toda la app
+│   └── useConfirm.js         # API de confirmación basada en Promises
 ├── stores/
-│   └── tasksStore.js         # Pinia store for task operations
+│   └── tasksStore.js         # Store de Pinia para operaciones sobre tareas
 └── api/
-    └── tasksApi.js           # Supabase queries and client-side sorting
+    └── tasksApi.js           # Consultas a Supabase y ordenación en cliente
 ```
 
-`HomeView` owns the filter/search state, computes the filtered task list and counters, and passes data down as props. Child components emit events upward and avoid side effects where possible.
+`HomeView` gestiona el estado de filtro y búsqueda, calcula la lista filtrada y los contadores, y pasa los datos hacia abajo como props. Los componentes hijos emiten eventos hacia arriba y evitan efectos secundarios donde es posible.
 
 ---
 
-## Technical improvements
+## Mejoras técnicas aplicadas
 
-### Phase 1 — Repo hygiene and production deploy
-- Added `.gitignore`; removed `node_modules` from Git history
-- Created `.env.example` to document required environment variables
-- Rebuilt an expired Supabase backend from scratch (schema, indexes, RLS policies)
-- Diagnosed and resolved a production failure: the root cause was infrastructure expiry, not a config issue
+### Fase 1 — Repositorio limpio y deploy en producción
+- Añadido `.gitignore`; eliminado `node_modules` del historial de Git
+- Creado `.env.example` para documentar las variables de entorno necesarias
+- Reconstruido desde cero un backend de Supabase caducado (schema, índices, políticas RLS)
+- Diagnosticado y resuelto un fallo en producción: la causa raíz era la caducidad de la infraestructura, no un problema de configuración
 
-### Phase 2 — Component refactor
-- Split a ~750-line monolithic view into 5 single-responsibility components
-- Moved editing and menu state to the component level where it belongs
-- Fixed a memory leak: `document` event listeners now clean up on `onUnmounted`
+### Fase 2 — Refactor a componentes
+- División de una vista monolítica de ~750 líneas en 5 componentes de responsabilidad única
+- Estado de edición y menú movido al nivel de componente donde corresponde
+- Corregido un memory leak: los event listeners del `document` ahora se limpian en `onUnmounted`
 
-### Phase 3 — UX improvements
-- Replaced all native `alert()` and `confirm()` with a custom toast and modal system
-- Composable singletons (`useToast`, `useConfirm`) shared app-wide via `<Teleport>`
-- Loading spinner on page load; buttons disabled during any in-flight async operation
+### Fase 3 — Mejoras de UX
+- Reemplazados todos los `alert()` y `confirm()` nativos por un sistema propio de toasts y modal
+- Composables singleton (`useToast`, `useConfirm`) compartidos en toda la app via `<Teleport>`
+- Spinner de carga al abrir la app; botones desactivados durante cualquier operación en curso
 
-### Phase 4 — Filters, search and counters
-- Filter tabs (All / Pending / Completed) with real-time text search
-- Counters computed from the full task list, independent of the active filter
-- Contextual empty state: unique SVG icon and message per scenario
+### Fase 4 — Filtros, búsqueda y contadores
+- Pestañas de filtro (Todas / Pendientes / Completadas) con búsqueda de texto en tiempo real
+- Contadores calculados sobre la lista completa, independientes del filtro activo
+- Estado vacío contextual: icono SVG y mensaje únicos por escenario
 
 ### UI polish
-- Removed heavy left-border indicators from hover and favorite states
-- Replaced with a subtle shadow lift on hover and a warm background + soft border for favorites
+- Eliminadas las franjas laterales de color en hover y favorito
+- Sustituidas por una sombra suave en hover y fondo cálido + borde suave para favoritos
 
 ---
 
-## Getting started
+## Instalación local
 
-### Prerequisites
+### Requisitos previos
 
 - Node.js 18+
-- A Supabase project with the `todos` table (schema below)
+- Un proyecto de Supabase con la tabla `todos` (schema más abajo)
 
-### Installation
+### Instalación
 
 ```bash
 git clone https://github.com/Andybetan/ih-todo-list-project.git
@@ -120,24 +120,24 @@ cd ih-todo-list-project
 npm install
 ```
 
-### Environment variables
+### Variables de entorno
 
-Create a `.env` file in the project root (use `.env.example` as reference):
+Crea un archivo `.env` en la raíz del proyecto (usa `.env.example` como referencia):
 
 ```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_ANON_KEY=tu_clave_anonima_de_supabase
 ```
 
-> `.env` is excluded from version control. Never commit real credentials.
+> El archivo `.env` está excluido del control de versiones. No subas credenciales reales al repositorio.
 
-### Run locally
+### Ejecutar en local
 
 ```bash
 npm run dev
 ```
 
-### Database schema
+### Schema de base de datos
 
 ```sql
 CREATE TABLE todos (
@@ -152,7 +152,7 @@ CREATE TABLE todos (
 
 ALTER TABLE todos ENABLE ROW LEVEL SECURITY;
 
--- Each user can only access their own tasks
+-- Cada usuario solo puede acceder a sus propias tareas
 CREATE POLICY "select_own" ON todos FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "insert_own" ON todos FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "update_own" ON todos FOR UPDATE USING (auth.uid() = user_id);
@@ -161,34 +161,34 @@ CREATE POLICY "delete_own" ON todos FOR DELETE USING (auth.uid() = user_id);
 
 ---
 
-## Security
+## Seguridad
 
-- Row Level Security is enabled on the `todos` table — the database itself enforces per-user isolation
-- The Supabase anon key is designed to be client-side safe; RLS policies are the actual security layer
-- No real credentials are committed to this repository
-
----
-
-## What I learned
-
-- Vue 3 Composition API, `<script setup>` and the mental model of reactive state
-- When to use props, emits, composables and a Pinia store — and why the distinction matters
-- Supabase: Auth flows, Row Level Security and writing database policies
-- How Vite exposes environment variables to the client (`VITE_` prefix) and why production builds differ
-- Debugging a live production failure: distinguishing a config issue from infrastructure expiry
-- UX patterns worth caring about: non-blocking notifications, loading states, contextual empty states
+- Row Level Security está activado en la tabla `todos` — la propia base de datos aplica el aislamiento por usuario
+- La clave anónima de Supabase está diseñada para ser segura en el cliente; las políticas RLS son la capa de seguridad real
+- No hay credenciales reales en este repositorio
 
 ---
 
-## Possible next steps
+## Qué aprendí
 
-- Dark mode
-- Due dates and reminders
-- Drag-and-drop reordering
-- Mobile layout refinements
+- Vue 3 Composition API, sintaxis `<script setup>` y el modelo mental de estado reactivo
+- Cuándo usar props, emits, composables y un store de Pinia — y por qué importa la distinción
+- Supabase: flujos de autenticación, Row Level Security y políticas de base de datos
+- Cómo Vite expone las variables de entorno al cliente (prefijo `VITE_`) y por qué difieren entre local y producción
+- Depuración de un fallo en producción: distinguir un problema de configuración de una caducidad de infraestructura
+- Patrones de UX que marcan la diferencia: notificaciones no bloqueantes, estados de carga, estados vacíos contextuales
 
 ---
 
-## License
+## Posibles próximos pasos
+
+- Modo oscuro
+- Fechas límite y recordatorios
+- Reordenación por drag & drop
+- Mejoras de layout en móvil
+
+---
+
+## Licencia
 
 MIT — © 2026 Andrés Beltrán Betancourt
