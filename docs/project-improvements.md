@@ -335,7 +335,6 @@ El `computed` `filteredTasks` aplica `Array.filter()` sobre el array ya ordenado
 
 **Qué demuestra técnicamente:**
 - Uso de `computed` en Vue 3 para derivar datos sin duplicar estado
-- Flujo de datos unidireccional: estado en el orquestador, componentes presentacionales sin efectos secundarios
 - Separación clara entre datos de origen (store) y datos de vista (filtrados)
 - Comunicación padre→hijo con props y hijo→padre con `emit`
 - SVGs inline accesibles sin dependencias externas
